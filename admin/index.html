@@ -727,7 +727,7 @@
         : `<span class="badge badge--desktop">💻 Desktop</span>`;
 
       return `
-        <tr>
+        <tr oncontextmenu="showContextMenu(event, '${log.id}', '${encodeURIComponent(log.country || 'Log')}', '${encodeURIComponent(log.ip || '')}')" style="cursor:context-menu;" title="Right-click to delete log">
           <td style="white-space:nowrap;font-weight:600;">${log.timestamp || 'N/A'}</td>
           <td><span class="code-tag">${log.ip || 'N/A'}</span></td>
           <td style="font-weight:600;">${log.country || 'N/A'} <span style="color:#9ca3af;font-size:0.78rem;">(${log.city || ''})</span></td>
@@ -836,6 +836,102 @@
     link.click();
     document.body.removeChild(link);
   }
+
+  // --- RIGHT CLICK CONTEXT MENU & INDIVIDUAL LOG DELETION ---
+  let selectedLogForDelete = null;
+
+  function showContextMenu(e, logId, countryEncoded, ipEncoded) {
+    e.preventDefault();
+    selectedLogForDelete = {
+      id: logId,
+      country: decodeURIComponent(countryEncoded),
+      ip: decodeURIComponent(ipEncoded)
+    };
+
+    const menu = document.getElementById("custom-context-menu");
+    if (!menu) return;
+    
+    // Position menu at mouse click coordinates
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    
+    menu.style.left = Math.min(mouseX, window.innerWidth - 210) + "px";
+    menu.style.top = Math.min(mouseY, window.innerHeight - 100) + "px";
+    menu.style.display = "block";
+  }
+
+  // Hide context menu when clicking anywhere else
+  document.addEventListener("click", (e) => {
+    const menu = document.getElementById("custom-context-menu");
+    if (menu && !menu.contains(e.target)) {
+      menu.style.display = "none";
+    }
+  });
+
+  function triggerDeleteModalFromContext() {
+    const menu = document.getElementById("custom-context-menu");
+    if (menu) menu.style.display = "none";
+
+    if (!selectedLogForDelete) return;
+
+    const msg = `Are you sure you want to delete log <strong>${selectedLogForDelete.id}</strong>?<br><span style="color:#fca5a5;font-size:0.85rem;">(${selectedLogForDelete.country} • IP: ${selectedLogForDelete.ip})</span><br><br>This will permanently remove this entry from Cloud DB & Local Storage.`;
+    document.getElementById("delete-modal-msg").innerHTML = msg;
+    document.getElementById("delete-confirm-modal").style.display = "flex";
+  }
+
+  function closeDeleteModal() {
+    document.getElementById("delete-confirm-modal").style.display = "none";
+    selectedLogForDelete = null;
+  }
+
+  async function confirmDeleteLog() {
+    if (!selectedLogForDelete || !selectedLogForDelete.id) return;
+    const logId = selectedLogForDelete.id;
+
+    closeDeleteModal();
+
+    // 1. Filter out from memory array
+    combinedLogs = combinedLogs.filter(l => l.id !== logId);
+
+    // 2. Remove from LocalStorage
+    try {
+      const logs = JSON.parse(localStorage.getItem("cc_access_logs")) || [];
+      const updated = logs.filter(l => l.id !== logId);
+      localStorage.setItem("cc_access_logs", JSON.stringify(updated));
+    } catch (e) {}
+
+    // 3. Delete from Firebase Realtime Cloud DB
+    try {
+      await fetch(`${CLOUD_DB_URL}/${logId}.json`, { method: "DELETE" });
+    } catch (e) {}
+
+    // 4. Re-render UI table instantly
+    renderLogsTable();
+  }
 </script>
+
+<!-- ===== CUSTOM RIGHT-CLICK CONTEXT MENU ===== -->
+<div id="custom-context-menu" style="display:none;position:fixed;z-index:99999;background:#18181b;border:1.5px solid #ef4444;border-radius:10px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.85);min-width:190px;">
+  <div onclick="triggerDeleteModalFromContext()" style="padding:10px 14px;color:#f87171;font-weight:600;font-size:0.88rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:10px;transition:all 0.2s;" onmouseover="this.style.background='#27272a';this.style.color='#ef4444'" onmouseout="this.style.background='transparent';this.style.color='#f87171'">
+    🗑️ Delete This Log
+  </div>
+</div>
+
+<!-- ===== DELETE CONFIRMATION MODAL ===== -->
+<div id="delete-confirm-modal" class="auth-overlay" style="display:none;z-index:100000;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);">
+  <div class="auth-card" style="max-width:440px;border-color:#ef4444;text-align:center;box-shadow:0 20px 50px rgba(239,68,68,0.2);">
+    <div style="font-size:3rem;margin-bottom:8px;">⚠️</div>
+    <h3 style="color:#f87171;font-family:var(--font-heading);font-size:1.3rem;margin-bottom:12px;letter-spacing:1px;">CONFIRM LOG DELETION</h3>
+    <p id="delete-modal-msg" style="color:#d1d5db;font-size:0.9rem;line-height:1.6;margin-bottom:24px;">
+      Are you sure you want to delete this log entry?
+    </p>
+
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <button onclick="closeDeleteModal()" class="admin-btn" style="background:#374151;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-weight:600;">❌ Cancel</button>
+      <button onclick="confirmDeleteLog()" class="admin-btn" style="background:#dc2626;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-weight:700;box-shadow:0 4px 14px rgba(220,38,38,0.4);">✅ Yes, Delete Log</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
