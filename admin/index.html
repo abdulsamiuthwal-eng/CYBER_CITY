@@ -559,11 +559,19 @@
 <script src="../assets/js/geo-engine.js"></script>
 <script>
   const AUTH_KEY = "cc_admin_authed";
-  const EXPECTED_USER = "samiuthwal";
-  const EXPECTED_PASS = "admin5911";
+  // Credentials stored as SHA-256 hashes — never plaintext in source
+  const H_USER = "7c7ac264784810f49ce6f6e924f03a65d39b407936d7dd8b356a4944fb629b6f";
+  const H_PASS = "acb11dcf0d13342d2738c6f88452db36cf1ce34276693b8b2d2e16f9d00f6ff0";
   const CLOUD_DB_URL = "https://cybercity2050-logs-default-rtdb.firebaseio.com/access_logs.json";
 
   let combinedLogs = [];
+
+  async function hashString(str) {
+    const msgBuffer = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
 
   function isLocalhostWorkstation() {
     const host = window.location.hostname;
@@ -597,13 +605,15 @@
     startLiveLogRefresher();
   }
 
-  function handleAdminLogin(e) {
+  async function handleAdminLogin(e) {
     e.preventDefault();
     const user = document.getElementById("auth-username").value.trim();
     const pass = document.getElementById("auth-password").value.trim();
     const errDiv = document.getElementById("auth-error");
 
-    if (user === EXPECTED_USER && pass === EXPECTED_PASS) {
+    const [hashedUser, hashedPass] = await Promise.all([hashString(user), hashString(pass)]);
+
+    if (hashedUser === H_USER && hashedPass === H_PASS) {
       sessionStorage.setItem(AUTH_KEY, "true");
       errDiv.style.display = "none";
       showDashboard();
