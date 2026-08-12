@@ -299,12 +299,17 @@
       }
     }
 
-    // Deduplication: skip if same session already logged this path
+    // Log entry creation logic (Logs on new path OR whenever IP changes e.g. VPN connected)
     let logId = sessionStorage.getItem(SESSION_LOGGED_KEY + "_" + currentPath);
+    const lastLoggedIP = sessionStorage.getItem("cc_last_logged_ip");
+    const ipChanged = geoData.ip && geoData.ip !== "Unknown" && lastLoggedIP !== geoData.ip;
 
-    if (!logId) {
+    if (!logId || ipChanged) {
       logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
       sessionStorage.setItem(SESSION_LOGGED_KEY + "_" + currentPath, logId);
+      if (geoData.ip && geoData.ip !== "Unknown") {
+        sessionStorage.setItem("cc_last_logged_ip", geoData.ip);
+      }
 
       let batteryInfo = "N/A";
       try {
