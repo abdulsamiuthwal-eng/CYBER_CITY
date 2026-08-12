@@ -105,13 +105,15 @@
       if (ruleEl) ruleEl.textContent = 'Geographic or Device Restriction Enforced';
     }
 
-    // Try fetching IP
-    fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
+    // Fetch real IP via ipwho.is (no VPN 403 blocks)
+    fetch('https://ipwho.is/').then(r => r.json()).then(data => {
       const ipEl = document.getElementById('visitor-ip');
-      if (ipEl) ipEl.textContent = data.ip || '182.185.120.4';
+      if (ipEl) ipEl.textContent = (data && data.success && data.ip) ? data.ip : 'Detecting...';
     }).catch(() => {
-      const ipEl = document.getElementById('visitor-ip');
-      if (ipEl) ipEl.textContent = '182.185.120.4';
+      fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
+        const ipEl = document.getElementById('visitor-ip');
+        if (ipEl) ipEl.textContent = data.ip || 'Detecting...';
+      }).catch(() => {});
     });
   });
 </script>

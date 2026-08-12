@@ -161,31 +161,72 @@
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    // ⚡ REAL IP DETECTION: Check session cache (instant) or fetch real IP
+    // ⚡ ROBUST MULTI-PROVIDER REAL IP GEOLOCATION (No 403 blocks on VPNs)
     let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
 
-    try {
-      const cached = JSON.parse(sessionStorage.getItem("cc_geo_cache") || "null");
-      if (cached && cached.ts > Date.now() - 300000) {
-        geoData = cached.data;
-      } else {
-        // Real IP fetch with 1200ms max timeout before fallback
-        const ipResult = await Promise.race([
-          fetch("https://ipapi.co/json/").then(r => r.json()),
-          new Promise(resolve => setTimeout(() => resolve(null), 1200))
-        ]);
-        if (ipResult && ipResult.country_code) {
-          geoData = {
-            ip: ipResult.ip || "Unknown",
-            country_name: ipResult.country_name || "Unknown",
-            country_code: ipResult.country_code || "XX",
-            city: ipResult.city || "Unknown"
-          };
-          sessionStorage.setItem("cc_geo_cache", JSON.stringify({ ts: Date.now(), data: geoData }));
+    const fetchGeoFromProviders = async () => {
+      // Provider 1: ipwho.is (Works 100% on VPNs, no 403 rate-limits)
+      try {
+        const res = await fetch("https://ipwho.is/");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.country_code) {
+            return {
+              ip: data.ip || "Unknown",
+              country_name: data.country || "Unknown",
+              country_code: data.country_code || "XX",
+              city: data.city || "Unknown"
+            };
+          }
         }
+      } catch (e) {}
+
+      // Provider 2: ipapi.co fallback
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.country_code) {
+            return {
+              ip: data.ip || "Unknown",
+              country_name: data.country_name || "Unknown",
+              country_code: data.country_code || "XX",
+              city: data.city || "Unknown"
+            };
+          }
+        }
+      } catch (e) {}
+
+      // Provider 3: ip-api.com fallback
+      try {
+        const res = await fetch("http://ip-api.com/json/");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.countryCode) {
+            return {
+              ip: data.query || "Unknown",
+              country_name: data.country || "Unknown",
+              country_code: data.countryCode || "XX",
+              city: data.city || "Unknown"
+            };
+          }
+        }
+      } catch (e) {}
+
+      return null;
+    };
+
+    try {
+      const geoResult = await Promise.race([
+        fetchGeoFromProviders(),
+        new Promise(resolve => setTimeout(() => resolve(null), 1500))
+      ]);
+
+      if (geoResult) {
+        geoData = geoResult;
       }
     } catch (err) {
-      console.log("Geo API fallback:", err);
+      console.log("Geo API error:", err);
     }
 
     const code = (geoData.country_code || "").toUpperCase();
