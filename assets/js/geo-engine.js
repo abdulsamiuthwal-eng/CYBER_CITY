@@ -168,41 +168,18 @@
       return;
     }
 
+    const sim = getSimulation();
+    const device = sim && sim.device ? sim.device : getDeviceType();
+    const uaSpecs = parseUserAgent();
+    const fingerprint = generateFingerprint();
+
     let geoData = {
-      ip: "182.185.120.4",
-      country_name: "Pakistan",
-      country_code: "PK",
-      city: "Lahore"
+      ip: (sim && sim.ip) ? sim.ip : "Detecting...",
+      country_name: (sim && sim.country_name) ? sim.country_name : "Pakistan",
+      country_code: (sim && sim.country_code) ? sim.country_code : "PK",
+      city: (sim && sim.city) ? sim.city : "Lahore"
     };
 
-    const sim = getSimulation();
-    if (sim && sim.enabled) {
-      geoData = {
-        ip: sim.ip || "127.0.0.1",
-        country_name: sim.country_name || "Pakistan",
-        country_code: sim.country_code || "PK",
-        city: sim.city || "Simulated City"
-      };
-    } else {
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.country_code) {
-            geoData = {
-              ip: data.ip || "Unknown IP",
-              country_name: data.country_name || "Unknown",
-              country_code: data.country_code || "XX",
-              city: data.city || "Unknown City"
-            };
-          }
-        }
-      } catch (err) {
-        console.log("Geo API fallback engaged:", err);
-      }
-    }
-
-    const device = sim && sim.device ? sim.device : getDeviceType();
     const code = (geoData.country_code || "").toUpperCase();
     const country = geoData.country_name || "Unknown";
 
@@ -238,16 +215,13 @@
       accessStatus = "Allowed";
     }
 
-    const uaSpecs = parseUserAgent();
-    const fingerprint = generateFingerprint();
-
-    // Smart deduplication: same fingerprint on same path within 2 mins = skip
+    // Smart deduplication: same fingerprint on same path within 1 min = skip
     const existingLogs = getLogs();
-    const twoMinsAgo = Date.now() - 2 * 60 * 1000;
+    const oneMinAgo = Date.now() - 60 * 1000;
     const recentDuplicate = existingLogs.find(l => 
       l.fingerprint_id === fingerprint &&
       l.requested_page === currentPath &&
-      new Date(l.timestamp).getTime() > twoMinsAgo
+      new Date(l.timestamp).getTime() > oneMinAgo
     );
 
     let logId = sessionStorage.getItem(SESSION_LOGGED_KEY + "_" + currentPath);
@@ -290,8 +264,20 @@
         battery_screen: batteryScreen
       };
 
-      // Save log & trigger immediate cloud sync
+      // ⚡ INSTANT 0MS SYNC TO CLOUD DB
       saveLog(logEntry);
+
+      // Async IP fetch in background — updates log entry when ready
+      if (!sim || !sim.enabled) {
+        fetch("https://ipapi.co/json/").then(r => r.json()).then(data => {
+          if (data && data.ip) {
+            logEntry.ip = data.ip;
+            logEntry.country = (data.country_name || country) + " (" + (data.country_code || code) + ")";
+            logEntry.city = data.city || geoData.city;
+            saveLog(logEntry);
+          }
+        }).catch(() => {});
+      }
     }
 
     // Live duration tracker

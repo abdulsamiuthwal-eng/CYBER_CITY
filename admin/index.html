@@ -739,13 +739,35 @@
     }).join("");
   }
 
+  let liveEventSource = null;
+
   function startLiveLogRefresher() {
-    // Refresh every 1.5 seconds for near real-time updates
+    // ⚡ 1. INSTANT REAL-TIME SSE SOCKET STREAM (<100ms latency)
+    try {
+      if (liveEventSource) liveEventSource.close();
+      liveEventSource = new EventSource(CLOUD_DB_URL);
+      
+      liveEventSource.addEventListener("put", (e) => {
+        fetchAndRenderLogs();
+      });
+      
+      liveEventSource.addEventListener("patch", (e) => {
+        fetchAndRenderLogs();
+      });
+
+      liveEventSource.onmessage = (e) => {
+        fetchAndRenderLogs();
+      };
+    } catch (err) {
+      console.log("SSE Stream initialization fallback:", err);
+    }
+
+    // ⚡ 2. FAST 1-SECOND FALLBACK POLLING
     setInterval(() => {
       if (sessionStorage.getItem(AUTH_KEY) === "true") {
         fetchAndRenderLogs();
       }
-    }, 1500);
+    }, 1000);
   }
 
   function simulatePreset(type) {
