@@ -125,7 +125,7 @@
       max-width: 1600px;
       margin: 0 auto;
       padding: 30px 24px;
-      display: none; /* hidden until authenticated */
+      display: none;
     }
 
     .admin-nav {
@@ -446,6 +446,7 @@
     <div class="admin-nav-logo">
       CYBERCITY 2050
       <span class="admin-nav-badge">AUTHORIZED ADMIN PORTAL</span>
+      <span id="cloud-sync-status" style="font-size:0.75rem;color:#4ade80;margin-left:10px;font-weight:600;">☁️ Cloud DB Live Sync</span>
     </div>
 
     <div class="admin-nav-actions">
@@ -560,17 +561,17 @@
   const AUTH_KEY = "cc_admin_authed";
   const EXPECTED_USER = "samiuthwal";
   const EXPECTED_PASS = "admin5911";
+  const CLOUD_DB_URL = "https://cybercity2050-logs-default-rtdb.firebaseio.com/access_logs.json";
 
-  // Check Localhost Security Guard
+  let combinedLogs = [];
+
   function isLocalhostWorkstation() {
     const host = window.location.hostname;
     return host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "";
   }
 
-  // Check Auth State on Load
   window.addEventListener("DOMContentLoaded", () => {
     if (!isLocalhostWorkstation()) {
-      // Block public internet access on Vercel live server
       document.getElementById("admin-public-blocked").style.display = "flex";
       document.getElementById("admin-auth-overlay").style.display = "none";
       document.getElementById("admin-dashboard-root").style.display = "none";
@@ -592,7 +593,7 @@
   function showDashboard() {
     document.getElementById("admin-auth-overlay").style.display = "none";
     document.getElementById("admin-dashboard-root").style.display = "block";
-    renderLogsTable();
+    fetchAndRenderLogs();
     startLiveLogRefresher();
   }
 
@@ -616,12 +617,41 @@
     showLoginGate();
   }
 
-  function getLogsData() {
+  async function fetchAndRenderLogs() {
+    let localLogs = [];
     try {
-      return JSON.parse(localStorage.getItem("cc_access_logs")) || [];
+      localLogs = JSON.parse(localStorage.getItem("cc_access_logs")) || [];
+    } catch (e) {}
+
+    let cloudLogsArr = [];
+    try {
+      const res = await fetch(CLOUD_DB_URL);
+      if (res.ok) {
+        const cloudData = await res.json();
+        if (cloudData) {
+          cloudLogsArr = Object.values(cloudData);
+        }
+      }
     } catch (e) {
-      return [];
+      console.log("Cloud DB fetch fallback:", e);
     }
+
+    // Merge Local & Cloud Logs (deduplicate by ID)
+    const logMap = new Map();
+    [...cloudLogsArr, ...localLogs].forEach(item => {
+      if (item && item.id) {
+        // Keep newest / highest duration entry
+        if (!logMap.has(item.id) || (item.time_spent_seconds || 0) > (logMap.get(item.id).time_spent_seconds || 0)) {
+          logMap.set(item.id, item);
+        }
+      }
+    });
+
+    combinedLogs = Array.from(logMap.values()).sort((a, b) => {
+      return (b.id || "").localeCompare(a.id || "");
+    });
+
+    renderLogsTable();
   }
 
   function formatTimeSpent(seconds) {
@@ -633,13 +663,12 @@
   }
 
   function renderLogsTable() {
-    const logs = getLogsData();
     const tbody = document.getElementById("logs-tbody");
     const search = document.getElementById("search-input").value.toLowerCase();
     const statusFilter = document.getElementById("filter-status").value;
     const deviceFilter = document.getElementById("filter-device").value;
 
-    const filtered = logs.filter(log => {
+    const filtered = combinedLogs.filter(log => {
       const matchSearch =
         !search ||
         (log.ip || "").toLowerCase().includes(search) ||
@@ -654,15 +683,15 @@
       return matchSearch && matchStatus && matchDevice;
     });
 
-    document.getElementById("kpi-total").textContent = logs.length;
-    document.getElementById("kpi-allowed").textContent = logs.filter(l => l.status === "Allowed").length;
-    document.getElementById("kpi-blocked").textContent = logs.filter(l => l.status === "Blocked").length;
+    document.getElementById("kpi-total").textContent = combinedLogs.length;
+    document.getElementById("kpi-allowed").textContent = combinedLogs.filter(l => l.status === "Allowed").length;
+    document.getElementById("kpi-blocked").textContent = combinedLogs.filter(l => l.status === "Blocked").length;
     
-    const totalTime = logs.reduce((acc, l) => acc + (l.time_spent_seconds || 0), 0);
-    const avgTime = logs.length ? Math.round(totalTime / logs.length) : 0;
+    const totalTime = combinedLogs.reduce((acc, l) => acc + (l.time_spent_seconds || 0), 0);
+    const avgTime = combinedLogs.length ? Math.round(totalTime / combinedLogs.length) : 0;
     document.getElementById("kpi-time").textContent = avgTime + "s";
 
-    const uniqueFps = new Set(logs.map(l => l.fingerprint_id).filter(Boolean)).size;
+    const uniqueFps = new Set(combinedLogs.map(l => l.fingerprint_id).filter(Boolean)).size;
     document.getElementById("kpi-fps").textContent = uniqueFps;
 
     document.getElementById("log-count-display").textContent = filtered.length;
@@ -703,7 +732,7 @@
   function startLiveLogRefresher() {
     setInterval(() => {
       if (sessionStorage.getItem(AUTH_KEY) === "true") {
-        renderLogsTable();
+        fetchAndRenderLogs();
       }
     }, 4000);
   }
@@ -725,22 +754,25 @@
     window.setGeoSimulation(presets[type]);
   }
 
-  function clearLogs() {
+  async function clearLogs() {
     if (confirm("Are you sure you want to clear all access log records?")) {
       localStorage.removeItem("cc_access_logs");
+      try {
+        await fetch(CLOUD_DB_URL, { method: "DELETE" });
+      } catch (e) {}
+      combinedLogs = [];
       renderLogsTable();
     }
   }
 
   function exportLogsCSV() {
-    const logs = getLogsData();
-    if (!logs.length) {
+    if (!combinedLogs.length) {
       alert("No log entries to export.");
       return;
     }
 
     const headers = ["Timestamp", "IP Address", "Country", "City", "Device Type", "Access Status", "Reason", "Requested Page", "Time Spent (s)", "Device Specs", "Browser & OS", "Fingerprint ID", "Battery & Screen"];
-    const rows = logs.map(l => [
+    const rows = combinedLogs.map(l => [
       `"${l.timestamp || ''}"`,
       `"${l.ip || ''}"`,
       `"${l.country || ''}"`,

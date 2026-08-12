@@ -1,14 +1,17 @@
 /* =========================================================
-   CYBERCITY 2050 — GEOLOCATION, DEVICE & LOGGING ENGINE
-   Assignment Tasks 1, 2, & 3 + Telemetry & Duration Tracker
+   CYBERCITY 2050 — GEOLOCATION, DEVICE, LOGGING & CLOUD SYNC
+   Tasks 1, 2, 3 + Live Duration Tracker + Global Cloud Database
    ========================================================= */
 
 (function () {
   const STORAGE_KEY = "cc_access_logs";
   const SIMULATION_KEY = "cc_geo_simulation";
   const CURRENT_SESSION_ID_KEY = "cc_active_session_id";
+  
+  // 100% Free Centralized Cloud DB Endpoint (Firebase Realtime REST DB)
+  const CLOUD_DB_URL = "https://cybercity2050-logs-default-rtdb.firebaseio.com/access_logs";
 
-  // --- 1. HELPERS: LOGS DATABASE ---
+  // --- 1. HELPERS: LOCAL & CLOUD DB LOGGING ---
   function getLogs() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -23,11 +26,26 @@
     } catch (e) {}
   }
 
+  async function syncToCloudDB(entry) {
+    try {
+      await fetch(`${CLOUD_DB_URL}/${entry.id}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entry)
+      });
+    } catch (e) {
+      console.log("Cloud DB sync fallback:", e);
+    }
+  }
+
   function saveLog(entry) {
     const logs = getLogs();
-    logs.unshift(entry); // newest first
-    if (logs.length > 500) logs.pop(); // keep last 500
+    logs.unshift(entry);
+    if (logs.length > 500) logs.pop();
     saveLogs(logs);
+
+    // Sync to Cloud DB so Admin can view global Vercel visitors on laptop
+    syncToCloudDB(entry);
   }
 
   function updateSessionDuration(logId, seconds) {
@@ -36,6 +54,7 @@
     if (index !== -1) {
       logs[index].time_spent_seconds = seconds;
       saveLogs(logs);
+      syncToCloudDB(logs[index]);
     }
   }
 
@@ -83,7 +102,6 @@
     let os = "OS";
     let deviceModel = "Desktop PC / Laptop";
 
-    // Detect OS
     if (/Windows NT 10.0/i.test(ua)) os = "Windows 11 / 10";
     else if (/Windows NT 6.1/i.test(ua)) os = "Windows 7";
     else if (/Mac OS X/i.test(ua)) os = "macOS";
@@ -91,13 +109,11 @@
     else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
     else if (/Linux/i.test(ua)) os = "Linux";
 
-    // Detect Browser
     if (/Edg/i.test(ua)) browser = "MS Edge";
     else if (/Chrome/i.test(ua)) browser = "Chrome";
     else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = "Safari";
     else if (/Firefox/i.test(ua)) browser = "Firefox";
 
-    // Detect Device Model
     if (/iPhone/i.test(ua)) deviceModel = "iPhone";
     else if (/iPad/i.test(ua)) deviceModel = "iPad";
     else if (/Samsung|SM-|GT-/i.test(ua)) deviceModel = "Samsung Galaxy";
@@ -142,7 +158,6 @@
   async function runGeoEngine() {
     const currentPath = window.location.pathname;
 
-    // Prevent redirect loop if already on a target page or admin dashboard
     if (
       currentPath.includes("/pages/ur/") ||
       currentPath.includes("/pages/ar/") ||
@@ -195,7 +210,6 @@
     let accessStatus = "Allowed";
     let blockReason = "";
 
-    // === TASK 1 & 2 ASSIGNMENT RULES ===
     if (code === "AU" || code === "CA" || country === "Australia" || country === "Canada") {
       accessStatus = "Blocked";
       blockReason = "Country Restricted (" + country + ")";
@@ -216,13 +230,11 @@
       accessStatus = "Allowed";
     }
 
-    // Capture telemetry specs
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
     const logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
     const sessionStartTime = Date.now();
 
-    // Battery level (async check)
     let batteryInfo = "N/A";
     try {
       if (navigator.getBattery) {
@@ -240,7 +252,6 @@
 
     const batteryScreen = batteryInfo + " • " + screen.width + "x" + screen.height + " (" + window.innerWidth + "x" + window.innerHeight + ")";
 
-    // === TASK 3: SAVE COMPREHENSIVE ACCESS LOG ===
     const logEntry = {
       id: logId,
       timestamp: new Date().toLocaleString(),
@@ -261,7 +272,6 @@
     saveLog(logEntry);
     sessionStorage.setItem(CURRENT_SESSION_ID_KEY, logId);
 
-    // --- LIVE SESSION DURATION TRACKER ---
     let durationSeconds = 0;
     const interval = setInterval(() => {
       durationSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
@@ -281,7 +291,6 @@
       }
     });
 
-    // Perform redirect if required
     if (redirectUrl) {
       setTimeout(() => {
         window.location.href = redirectUrl;
