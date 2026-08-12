@@ -629,20 +629,42 @@
       console.log("Cloud DB fetch fallback:", e);
     }
 
-    // Merge Local & Cloud Logs (deduplicate by ID)
+    // Merge Local & Cloud Logs by ID with deep field preservation
     const logMap = new Map();
+
+    // Process cloud logs first, then merge local logs
     [...cloudLogsArr, ...localLogs].forEach(item => {
       if (item && item.id) {
-        // Keep newest / highest duration entry
-        if (!logMap.has(item.id) || (item.time_spent_seconds || 0) > (logMap.get(item.id).time_spent_seconds || 0)) {
-          logMap.set(item.id, item);
+        if (!logMap.has(item.id)) {
+          logMap.set(item.id, { ...item });
+        } else {
+          // Merge fields so we don't lose IP/Country/Status if duration was updated
+          const existing = logMap.get(item.id);
+          logMap.set(item.id, {
+            ...existing,
+            ...item,
+            // Keep longest duration & non-empty fields
+            time_spent_seconds: Math.max(existing.time_spent_seconds || 0, item.time_spent_seconds || 0),
+            country: (item.country && item.country !== "Unknown (XX)") ? item.country : existing.country,
+            ip: (item.ip && item.ip !== "Unknown") ? item.ip : existing.ip,
+            status: item.status || existing.status
+          });
         }
       }
     });
 
-    combinedLogs = Array.from(logMap.values()).sort((a, b) => {
-      return (b.id || "").localeCompare(a.id || "");
-    });
+    // Helper to extract timestamp for accurate descending sort (newest on top)
+    const getLogTime = (entry) => {
+      if (entry.id && entry.id.startsWith("LOG-")) {
+        const parts = entry.id.split("-");
+        if (parts[1] && !isNaN(parts[1])) {
+          return Number(parts[1]);
+        }
+      }
+      return new Date(entry.timestamp || 0).getTime() || 0;
+    };
+
+    combinedLogs = Array.from(logMap.values()).sort((a, b) => getLogTime(b) - getLogTime(a));
 
     renderLogsTable();
   }

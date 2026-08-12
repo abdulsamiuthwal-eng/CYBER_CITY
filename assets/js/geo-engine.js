@@ -61,10 +61,16 @@
     if (index !== -1) {
       logs[index].time_spent_seconds = seconds;
       saveLogs(logs);
-      syncToCloudDB(logs[index]);
-    } else {
-      syncToCloudDB({ id: logId, time_spent_seconds: seconds, last_updated: new Date().toLocaleString() });
     }
+    // Use PATCH so duration updates merge into Firebase without erasing IP, country, or status
+    try {
+      fetch(`${CLOUD_DB_URL}/${logId}.json`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ time_spent_seconds: seconds }),
+        keepalive: true
+      });
+    } catch (e) {}
   }
 
   // --- 2. ADVANCED HARDWARE FINGERPRINTING & TELEMETRY ---
