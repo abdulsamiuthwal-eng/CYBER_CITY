@@ -32,37 +32,6 @@
       line-height: 1.7;
       margin-bottom: 24px;
     }
-    .sim-panel {
-      max-width: 700px;
-      margin: 0 auto 80px;
-      background: #f9fafb;
-      border: 1.5px solid #d1d5db;
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-    }
-    .sim-btn-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 14px;
-    }
-    .sim-btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid #16a34a;
-      background: #fff;
-      color: #14532d;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-    }
-    .sim-btn:hover {
-      background: #16a34a;
-      color: #fff;
-    }
   </style>
 </head>
 <body>
@@ -100,19 +69,6 @@
 
 </div>
 
-<div class="sim-panel">
-  <h3 style="font-family: var(--font-heading); color: #041404; font-size: 1.05rem;">🧪 ASSIGNMENT TESTING & SIMULATION PANEL</h3>
-  <p style="font-size: 0.82rem; color: #6b7280; margin-top: 4px;">Click any button below to instantly simulate visitor regions/devices:</p>
-  
-  <div class="sim-btn-group">
-    <button class="sim-btn" onclick="testSim('PK', 'Pakistan', 'Desktop', 'Lahore')">🇵🇰 Pakistan (Desktop Blocked)</button>
-    <button class="sim-btn" onclick="testSim('AU', 'Australia', 'Desktop', 'Sydney')">🇦🇺 Australia (Blocked)</button>
-    <button class="sim-btn" onclick="testSim('SA', 'Saudi Arabia', 'Desktop', 'Riyadh')">🇸🇦 Saudi Arabia (Arabic)</button>
-    <button class="sim-btn" onclick="testSim('GB', 'United Kingdom', 'Desktop', 'London')">🇬🇧 UK (English)</button>
-    <button class="sim-btn" onclick="resetSim()" style="border-color:#6b7280; color:#374151;">🔄 Reset Real Detection</button>
-  </div>
-</div>
-
 <footer>
   <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
   <div class="footer-copy">&copy; 2050 CyberCity Municipal Authority. Built for a better tomorrow.</div>
@@ -147,23 +103,6 @@
       document.getElementById('visitor-ip').textContent = '182.185.120.4';
     });
   });
-
-  function testSim(code, name, device, city) {
-    const config = {
-      enabled: true,
-      country_code: code,
-      country_name: name,
-      device: device,
-      city: city,
-      ip: '182.185.' + Math.floor(Math.random()*200) + '.4'
-    };
-    localStorage.setItem('cc_geo_simulation', JSON.stringify(config));
-    window.location.href = '../../index.html';
-  }
-
-  function resetSim() {
-    localStorage.removeItem('cc_geo_simulation');
-    window.location.href = '../../index.html';
   }
 </script>
 </body>

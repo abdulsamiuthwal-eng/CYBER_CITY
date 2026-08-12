@@ -145,26 +145,11 @@
     return isMobileUA || isMobileWidth ? "Mobile" : "Desktop";
   }
 
-  // --- 3. SIMULATION SUPPORT ---
-  function getSimulation() {
-    try {
-      return JSON.parse(localStorage.getItem(SIMULATION_KEY)) || null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  window.setGeoSimulation = function (simConfig) {
-    if (simConfig) {
-      localStorage.setItem(SIMULATION_KEY, JSON.stringify(simConfig));
-    } else {
-      localStorage.removeItem(SIMULATION_KEY);
-    }
-    window.location.reload();
-  };
-
-  // --- 4. MAIN GEOLOCATION & LOGGING ENGINE ---
+  // --- 3. GEOLOCATION & LOGGING ENGINE ---
   async function runGeoEngine() {
+    // Purge any lingering simulation keys to ensure 100% real IP detection
+    try { localStorage.removeItem("cc_geo_simulation"); } catch(e) {}
+
     const currentPath = window.location.pathname;
 
     // Do NOT run engine if on Admin portal
@@ -172,48 +157,35 @@
       return;
     }
 
-    const sim = getSimulation();
-    const device = sim && sim.device ? sim.device : getDeviceType();
+    const device = getDeviceType();
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    // ⚡ FAST IP DETECTION: Race real fetch (800ms max) vs session cache
+    // ⚡ REAL IP DETECTION: Check session cache (instant) or fetch real IP
     let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
 
-    if (sim && sim.enabled) {
-      // Simulation mode — use preset values instantly
-      geoData = {
-        ip: sim.ip || "127.0.0.1",
-        country_name: sim.country_name || "Pakistan",
-        country_code: sim.country_code || "PK",
-        city: sim.city || "Simulated"
-      };
-    } else {
-      // Check session cache first (instant, max 5 min old)
-      try {
-        const cached = JSON.parse(sessionStorage.getItem("cc_geo_cache") || "null");
-        if (cached && cached.ts > Date.now() - 300000) {
-          geoData = cached.data;
-        } else {
-          // Race: real IP fetch vs 800ms timeout
-          const ipResult = await Promise.race([
-            fetch("https://ipapi.co/json/").then(r => r.json()),
-            new Promise(resolve => setTimeout(() => resolve(null), 800))
-          ]);
-          if (ipResult && ipResult.country_code) {
-            geoData = {
-              ip: ipResult.ip || "Unknown",
-              country_name: ipResult.country_name || "Unknown",
-              country_code: ipResult.country_code || "XX",
-              city: ipResult.city || "Unknown"
-            };
-            // Cache for this session — next page will be instant
-            sessionStorage.setItem("cc_geo_cache", JSON.stringify({ ts: Date.now(), data: geoData }));
-          }
+    try {
+      const cached = JSON.parse(sessionStorage.getItem("cc_geo_cache") || "null");
+      if (cached && cached.ts > Date.now() - 300000) {
+        geoData = cached.data;
+      } else {
+        // Real IP fetch with 1200ms max timeout before fallback
+        const ipResult = await Promise.race([
+          fetch("https://ipapi.co/json/").then(r => r.json()),
+          new Promise(resolve => setTimeout(() => resolve(null), 1200))
+        ]);
+        if (ipResult && ipResult.country_code) {
+          geoData = {
+            ip: ipResult.ip || "Unknown",
+            country_name: ipResult.country_name || "Unknown",
+            country_code: ipResult.country_code || "XX",
+            city: ipResult.city || "Unknown"
+          };
+          sessionStorage.setItem("cc_geo_cache", JSON.stringify({ ts: Date.now(), data: geoData }));
         }
-      } catch (err) {
-        console.log("Geo API fallback:", err);
       }
+    } catch (err) {
+      console.log("Geo API fallback:", err);
     }
 
     const code = (geoData.country_code || "").toUpperCase();
