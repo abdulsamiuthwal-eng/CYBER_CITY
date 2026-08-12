@@ -427,9 +427,10 @@
         <input type="text" id="auth-username" class="auth-input" placeholder="Enter username" required autocomplete="off" />
       </div>
 
-      <div class="auth-input-group">
+      <div class="auth-input-group" style="position:relative;">
         <label class="auth-label">ADMIN PASSWORD</label>
-        <input type="password" id="auth-password" class="auth-input" placeholder="Enter password" required />
+        <input type="password" id="auth-password" class="auth-input" placeholder="Enter password" required style="padding-right:45px;" />
+        <span onclick="togglePasswordVisibility()" id="toggle-pass-icon" style="position:absolute;right:14px;top:34px;cursor:pointer;font-size:1.2rem;user-select:none;" title="Toggle Password Visibility">👁️</span>
       </div>
 
       <button type="submit" class="auth-btn">UNLOCK DASHBOARD &rarr;</button>
@@ -887,6 +888,19 @@
     selectedLogForDelete = null;
   }
 
+  function togglePasswordVisibility() {
+    const input = document.getElementById("auth-password");
+    const icon = document.getElementById("toggle-pass-icon");
+    if (!input || !icon) return;
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁️";
+    }
+  }
+
   async function confirmDeleteLog() {
     if (!selectedLogForDelete || !selectedLogForDelete.id) return;
     const logId = selectedLogForDelete.id;
@@ -903,9 +917,10 @@
       localStorage.setItem("cc_access_logs", JSON.stringify(updated));
     } catch (e) {}
 
-    // 3. Delete from Firebase Realtime Cloud DB
+    // 3. Delete from Firebase Realtime Cloud DB (Correct Endpoint: .../access_logs/LOG-123.json)
     try {
-      await fetch(`${CLOUD_DB_URL}/${logId}.json`, { method: "DELETE" });
+      const deleteUrl = CLOUD_DB_URL.replace(".json", `/${logId}.json`);
+      await fetch(deleteUrl, { method: "DELETE" });
     } catch (e) {}
 
     // 4. Re-render UI table instantly
