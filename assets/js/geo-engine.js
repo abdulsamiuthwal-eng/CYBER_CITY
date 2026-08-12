@@ -232,36 +232,65 @@
     const code = (geoData.country_code || "").toUpperCase();
     const country = geoData.country_name || "Unknown";
 
+    // Helper to build correct relative paths depending on current location
+    const getPagePath = (target) => {
+      const isSubFolder = currentPath.includes("/pages/");
+      if (target === "blocked") {
+        return isSubFolder ? "../blocked/index.html" : "pages/blocked/index.html";
+      }
+      if (target === "ur") {
+        return isSubFolder ? "../ur/index.html" : "pages/ur/index.html";
+      }
+      if (target === "ar") {
+        return isSubFolder ? "../ar/index.html" : "pages/ar/index.html";
+      }
+      if (target === "en") {
+        return isSubFolder ? "../../index.html" : "index.html";
+      }
+      return target;
+    };
+
     let redirectUrl = null;
     let accessStatus = "Allowed";
     let blockReason = "";
 
+    // --- TASK 1 & TASK 2 RULES ---
+    // 1. Australia & Canada -> Access Block (All Devices)
     if (code === "AU" || code === "CA" || country === "Australia" || country === "Canada") {
       accessStatus = "Blocked";
       blockReason = "Country Restricted (" + country + ")";
       if (!currentPath.includes("/pages/blocked/")) {
-        redirectUrl = "pages/blocked/index.html?reason=country_blocked&country=" + encodeURIComponent(country);
+        redirectUrl = getPagePath("blocked") + "?reason=country_blocked&country=" + encodeURIComponent(country);
       }
-    } else if (code === "PK" || country === "Pakistan") {
+    } 
+    // 2. Pakistan -> Mobile Only Allowed (Urdu), Desktop Blocked
+    else if (code === "PK" || country === "Pakistan") {
       if (device === "Mobile") {
         accessStatus = "Allowed";
         if (!currentPath.includes("/pages/ur/")) {
-          redirectUrl = "pages/ur/index.html";
+          redirectUrl = getPagePath("ur");
         }
       } else {
         accessStatus = "Blocked";
         blockReason = "Device Restricted (Pakistan requires Mobile Device)";
         if (!currentPath.includes("/pages/blocked/")) {
-          redirectUrl = "pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + device;
+          redirectUrl = getPagePath("blocked") + "?reason=device_restricted&country=Pakistan&device=" + device;
         }
       }
-    } else if (code === "SA" || code === "AE" || country === "Saudi Arabia" || country === "United Arab Emirates") {
+    } 
+    // 3. Saudi Arabia & UAE -> Arabic Version
+    else if (code === "SA" || code === "AE" || country === "Saudi Arabia" || country === "United Arab Emirates") {
       accessStatus = "Allowed";
       if (!currentPath.includes("/pages/ar/")) {
-        redirectUrl = "pages/ar/index.html";
+        redirectUrl = getPagePath("ar");
       }
-    } else {
+    } 
+    // 4. UK & All Other Countries -> English Version (Both Mobile & Desktop Allowed)
+    else {
       accessStatus = "Allowed";
+      if (currentPath.includes("/pages/ur/") || currentPath.includes("/pages/ar/") || currentPath.includes("/pages/blocked/")) {
+        redirectUrl = getPagePath("en");
+      }
     }
 
     // Deduplication: skip if same session already logged this path
