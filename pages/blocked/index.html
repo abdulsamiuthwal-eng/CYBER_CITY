@@ -75,35 +75,45 @@
 </footer>
 
 <script>
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const loader = document.getElementById('loader');
-      if (loader) loader.style.display = 'none';
-    }, 400);
+  function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'none';
+  }
 
+  // Safety fallback: Hide loader in max 500ms
+  setTimeout(hideLoader, 500);
+
+  window.addEventListener('load', hideLoader);
+  document.addEventListener('DOMContentLoaded', hideLoader);
+
+  window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const reason = urlParams.get('reason');
     const country = urlParams.get('country') || 'Restricted Region';
     const device = urlParams.get('device') || 'Desktop';
 
+    const reasonEl = document.getElementById('reason-text');
+    const ruleEl = document.getElementById('rule-detail');
+
     if (reason === 'device_restricted') {
-      document.getElementById('reason-text').textContent = 'CyberCity 2050 access from Pakistan is restricted to MOBILE DEVICES ONLY. You are accessing via a ' + device + '.';
-      document.getElementById('rule-detail').textContent = 'Task 2 — Pakistan Region Device Rule (Mobile Only Allowed)';
+      if (reasonEl) reasonEl.textContent = 'CyberCity 2050 access from Pakistan is restricted to MOBILE DEVICES ONLY. You are accessing via a ' + device + '.';
+      if (ruleEl) ruleEl.textContent = 'Task 2 — Pakistan Region Device Rule (Mobile Only Allowed)';
     } else if (reason === 'country_blocked') {
-      document.getElementById('reason-text').textContent = 'Access to CyberCity 2050 is not available in ' + country + ' due to regional regulations.';
-      document.getElementById('rule-detail').textContent = 'Task 1 — Geographic Restriction Rule (' + country + ' Blocked)';
+      if (reasonEl) reasonEl.textContent = 'Access to CyberCity 2050 is not available in ' + country + ' due to regional regulations.';
+      if (ruleEl) ruleEl.textContent = 'Task 1 — Geographic Restriction Rule (' + country + ' Blocked)';
     } else {
-      document.getElementById('rule-detail').textContent = 'Geographic or Device Restriction Enforced';
+      if (ruleEl) ruleEl.textContent = 'Geographic or Device Restriction Enforced';
     }
 
     // Try fetching IP
     fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
-      document.getElementById('visitor-ip').textContent = data.ip || '182.185.120.4';
+      const ipEl = document.getElementById('visitor-ip');
+      if (ipEl) ipEl.textContent = data.ip || '182.185.120.4';
     }).catch(() => {
-      document.getElementById('visitor-ip').textContent = '182.185.120.4';
+      const ipEl = document.getElementById('visitor-ip');
+      if (ipEl) ipEl.textContent = '182.185.120.4';
     });
   });
-  }
 </script>
 </body>
 </html>
