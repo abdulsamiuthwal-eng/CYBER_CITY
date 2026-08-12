@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Energy Grid System — CyberCity 2050</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .system-hero { padding: 120px 6% 60px; background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(244,247,244,0.7)); }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #16a34a; text-decoration: none; margin-bottom: 20px; font-size: 0.9rem; }
+    .system-title-lg { font-family: var(--font-heading); font-size: clamp(2.2rem, 5vw, 4rem); color: #041404; font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+    .system-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 60px 6%; max-width: 1200px; margin: 0 auto; align-items: center; }
+    .widget-box { background: rgba(255,255,255,0.95); border: 1.5px solid rgba(22,163,74,0.3); border-radius: 20px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+  </style>
+</head>
+<body>
+<!-- ===== LOADER ===== -->
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" style="background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(22,163,74,0.2);">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">RENEWABLE ENERGY DIVISION</span>
+    </div>
+  </a>
+  <a href="../index.html" class="btn-primary">&larr; Back to City Home</a>
+</nav>
+
+<header class="system-hero">
+  <a href="../index.html#systems" class="back-link">&larr; Back to All Systems</a>
+  <span class="section-tag">DIVISION 03 — ENERGY & POWER</span>
+  <h1 class="system-title-lg">RENEWABLE <span style="color:#16a34a;">ENERGY GRID</span></h1>
+  <p class="hero-desc" style="max-width:650px;">
+    94% clean sustainable energy from 40,000+ solar panels, wind turbine arrays, and smart kinetic energy harvesting infrastructure.
+  </p>
+</header>
+
+<main class="system-detail-grid">
+  <div class="reveal">
+    <img src="../assets/images/energy-grid.png" alt="Energy Grid System" style="width:100%;border-radius:24px;border:1.5px solid rgba(22,163,74,0.3);box-shadow:0 16px 40px rgba(0,0,0,0.1);" />
+  </div>
+
+  <div class="widget-box reveal">
+    <span class="section-tag">POWER GENERATION METRICS</span>
+    <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:#041404;margin:10px 0;">Clean Power Distribution</h3>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
+      <div style="background:#f4f7f4;padding:20px;border-radius:14px;border:1px solid rgba(22,163,74,0.2);">
+        <span style="font-size:0.7rem;color:#16a34a;font-weight:700;">SOLAR GENERATION</span>
+        <div style="font-family:var(--font-heading);font-size:1.8rem;color:#041404;font-weight:800;">4.8 GW</div>
+      </div>
+      <div style="background:#f4f7f4;padding:20px;border-radius:14px;border:1px solid rgba(22,163,74,0.2);">
+        <span style="font-size:0.7rem;color:#16a34a;font-weight:700;">WIND GENERATION</span>
+        <div style="font-family:var(--font-heading);font-size:1.8rem;color:#041404;font-weight:800;">2.1 GW</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer style="padding:40px 6%;background:#fff;border-top:1px solid rgba(22,163,74,0.15);text-align:center;">
+  <p style="font-size:0.85rem;color:#6b7280;">&copy; 2050 CyberCity Energy Board. Clean energy for all.</p>
+</footer>
+
+<script src="../assets/js/app.js"></script>
+</body>
+</html>
+

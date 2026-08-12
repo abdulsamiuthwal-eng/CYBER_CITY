@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCity 2050 — Protected Admin Telemetry Portal</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    /* Admin Specific Solarpunk Styling */
+    body {
+      background-color: #08150a;
+      color: #e2f1e5;
+      font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    
+    /* Login Lock Screen & Localhost Guard */
+    #admin-auth-overlay, #admin-public-blocked {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 15, 6, 0.95);
+      backdrop-filter: blur(25px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #admin-public-blocked {
+      display: none;
+    }
+
+    .auth-card {
+      background: linear-gradient(145deg, rgba(22, 163, 74, 0.08), rgba(4, 30, 10, 0.8));
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(22, 163, 74, 0.15);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      padding: 40px 32px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .auth-logo {
+      font-family: var(--font-heading, sans-serif);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #4ade80;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    .auth-sub {
+      color: #9ca3af;
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+    }
+
+    .auth-input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .auth-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #86efac;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .auth-input:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4);
+    }
+
+    .auth-error {
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-top: 14px;
+      display: none;
+    }
+
+    /* Main Dashboard Layout */
+    .admin-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 30px 24px;
+      display: none; /* hidden until authenticated */
+    }
+
+    .admin-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(12, 35, 16, 0.8);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      backdrop-filter: blur(15px);
+      border-radius: 16px;
+      padding: 16px 28px;
+      margin-bottom: 30px;
+    }
+
+    .admin-nav-logo {
+      font-family: var(--font-heading, sans-serif);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-nav-badge {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2f1e5;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .admin-btn:hover {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+    }
+
+    .admin-btn--danger {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .admin-btn--danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, rgba(16, 46, 22, 0.7), rgba(8, 25, 12, 0.9));
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #22c55e;
+      line-height: 1;
+    }
+
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    /* Simulation Bar */
+    .sim-bar {
+      background: rgba(15, 30, 18, 0.6);
+      border: 1px stroke rgba(34, 197, 94, 0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 30px;
+    }
+
+    .sim-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #86efac;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .sim-chip {
+      padding: 8px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 8px;
+      color: #d1fae5;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sim-chip:hover {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .sim-chip--reset {
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+
+    /* Controls & Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .filter-input {
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    select.filter-input {
+      cursor: pointer;
+    }
+
+    /* Data Table */
+    .table-card {
+      background: rgba(10, 28, 14, 0.85);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 16px;
+      overflow-x: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+      min-width: 1200px;
+    }
+
+    th {
+      background: rgba(22, 163, 74, 0.15);
+      color: #86efac;
+      padding: 14px 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-size: 0.72rem;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+      white-space: nowrap;
+    }
+
+    th.primary-col {
+      background: rgba(22, 163, 74, 0.25);
+      color: #bbf7d0;
+    }
+
+    th.telemetry-col {
+      background: rgba(6, 78, 59, 0.3);
+      color: #6ee7b7;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      color: #e2f1e5;
+    }
+
+    tr:hover td {
+      background: rgba(34, 197, 94, 0.05);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .badge--allowed {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .badge--blocked {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .badge--mobile {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    .badge--desktop {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+    }
+
+    .code-tag {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #a7f3d0;
+    }
+
+    .duration-tag {
+      font-weight: 700;
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== ⛔ PUBLIC VERCEL ACCESS DENIED OVERLAY ===== -->
+<div id="admin-public-blocked">
+  <div class="auth-card" style="border-color:rgba(239,68,68,0.4);">
+    <div class="auth-logo" style="color:#f87171;">⛔ LOCAL WORKSTATION ONLY</div>
+    <div class="auth-sub" style="color:#fca5a5;">ACCESS RESTRICTED</div>
+    <p style="font-size:0.9rem;color:#e2f1e5;line-height:1.6;margin-bottom:24px;">
+      The Admin Telemetry Dashboard is strictly restricted to the <strong>Local Administrator Laptop / Workstation (<code style="color:#4ade80;">localhost</code>)</strong>. Public remote access via Vercel cloud hosting is permanently disabled for system security.
+    </p>
+    <a href="../index.html" class="auth-btn" style="text-decoration:none;display:inline-block;background:linear-gradient(135deg,#dc2626,#991b1b);">
+      &larr; Return to CyberCity Home
+    </a>
+  </div>
+</div>
+
+<!-- ===== 🔐 ADMIN LOGIN LOCK GATE ===== -->
+<div id="admin-auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">CYBERCITY 2050</div>
+    <div class="auth-sub">PROTECTED ADMIN ACCESS PORTAL</div>
+
+    <form id="auth-form" onsubmit="handleAdminLogin(event)">
+      <div class="auth-input-group">
+        <label class="auth-label">ADMIN USERNAME</label>
+        <input type="text" id="auth-username" class="auth-input" placeholder="Enter username" required autocomplete="off" />
+      </div>
+
+      <div class="auth-input-group">
+        <label class="auth-label">ADMIN PASSWORD</label>
+        <input type="password" id="auth-password" class="auth-input" placeholder="Enter password" required />
+      </div>
+
+      <button type="submit" class="auth-btn">UNLOCK DASHBOARD &rarr;</button>
+      <div id="auth-error" class="auth-error">Incorrect Username or Password. Access Denied.</div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== 📊 DEDICATED ADMIN DASHBOARD ===== -->
+<div id="admin-dashboard-root" class="admin-container">
+  
+  <!-- Navigation Top Bar -->
+  <div class="admin-nav">
+    <div class="admin-nav-logo">
+      CYBERCITY 2050
+      <span class="admin-nav-badge">AUTHORIZED ADMIN PORTAL</span>
+    </div>
+
+    <div class="admin-nav-actions">
+      <button onclick="exportLogsCSV()" class="admin-btn">📥 Export CSV</button>
+      <button onclick="clearLogs()" class="admin-btn admin-btn--danger">🗑️ Clear Logs</button>
+      <button onclick="handleAdminLogout()" class="admin-btn admin-btn--danger" style="background:#dc2626;color:#fff;border:none;">🔒 Logout</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-title">Total Visitors Logged</div>
+      <div class="kpi-value" id="kpi-total">0</div>
+      <div class="kpi-sub">All-time access attempts</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">Allowed Visits</div>
+      <div class="kpi-value" id="kpi-allowed" style="color:#4ade80;">0</div>
+      <div class="kpi-sub">Task 1 & 2 compliant</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">Blocked Visits</div>
+      <div class="kpi-value" id="kpi-blocked" style="color:#f87171;">0</div>
+      <div class="kpi-sub">Restricted by country/device</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">Avg Session Time</div>
+      <div class="kpi-value" id="kpi-time" style="color:#fbbf24;">0s</div>
+      <div class="kpi-sub">Average duration on site</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">Unique Hardware Hash</div>
+      <div class="kpi-value" id="kpi-fps" style="color:#60a5fa;">0</div>
+      <div class="kpi-sub">Unique device fingerprints</div>
+    </div>
+  </div>
+
+  <!-- Simulation Toolbar -->
+  <div class="sim-bar">
+    <div class="sim-title">
+      ⚡ ASSIGNMENT RULE SIMULATOR TOOLBAR
+      <span style="font-weight:normal;font-size:0.75rem;color:#9ca3af;">(Click any preset to test Tasks 1 & 2 redirect rules instantly)</span>
+    </div>
+
+    <div class="sim-buttons">
+      <button class="sim-chip" onclick="simulatePreset('PK_MOBILE')">🇵🇰 Pakistan Mobile (Allowed -> Urdu)</button>
+      <button class="sim-chip" onclick="simulatePreset('PK_DESKTOP')">🇵🇰 Pakistan Desktop (Blocked -> Restriction)</button>
+      <button class="sim-chip" onclick="simulatePreset('AUSTRALIA')">🇦🇺 Australia (Blocked -> Country Block)</button>
+      <button class="sim-chip" onclick="simulatePreset('SAUDI')">🇸🇦 Saudi Arabia (Allowed -> Arabic)</button>
+      <button class="sim-chip" onclick="simulatePreset('UK_ENGLISH')">🇬🇧 UK English (Allowed -> English)</button>
+      <button class="sim-chip sim-chip--reset" onclick="simulatePreset('RESET')">🔄 Reset Real Location</button>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="filter-bar">
+    <div class="filter-inputs">
+      <input type="text" id="search-input" class="filter-input" placeholder="🔍 Search IP, Country, City, Device..." oninput="renderLogsTable()" style="min-width:240px;" />
+      
+      <select id="filter-status" class="filter-input" onchange="renderLogsTable()">
+        <option value="">All Statuses</option>
+        <option value="Allowed">🟢 Allowed</option>
+        <option value="Blocked">🔴 Blocked</option>
+      </select>
+
+      <select id="filter-device" class="filter-input" onchange="renderLogsTable()">
+        <option value="">All Devices</option>
+        <option value="Mobile">📱 Mobile</option>
+        <option value="Desktop">💻 Desktop</option>
+      </select>
+    </div>
+
+    <div style="font-size:0.8rem;color:#9ca3af;">
+      Showing <span id="log-count-display" style="color:#4ade80;font-weight:700;">0</span> records
+    </div>
+  </div>
+
+  <!-- Data Table with PDF Task Columns FIRST, Telemetry AFTER -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="primary-col">#1 Timestamp</th>
+          <th class="primary-col">#2 IP Address</th>
+          <th class="primary-col">#3 Country & City</th>
+          <th class="primary-col">#4 Device Type</th>
+          <th class="primary-col">#5 Access Status</th>
+          <th class="primary-col">#6 Target Page</th>
+          
+          <th class="telemetry-col">⏱️ Time Spent</th>
+          <th class="telemetry-col">💻 Device Specs</th>
+          <th class="telemetry-col">🌐 Browser & OS</th>
+          <th class="telemetry-col">🔑 Fingerprint ID</th>
+          <th class="telemetry-col">🔋 Battery & Screen</th>
+        </tr>
+      </thead>
+      <tbody id="logs-tbody">
+        <!-- Rendered via JS -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="../assets/js/geo-engine.js"></script>
+<script>
+  const AUTH_KEY = "cc_admin_authed";
+  const EXPECTED_USER = "samiuthwal";
+  const EXPECTED_PASS = "admin5911";
+
+  // Check Localhost Security Guard
+  function isLocalhostWorkstation() {
+    const host = window.location.hostname;
+    return host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "";
+  }
+
+  // Check Auth State on Load
+  window.addEventListener("DOMContentLoaded", () => {
+    if (!isLocalhostWorkstation()) {
+      // Block public internet access on Vercel live server
+      document.getElementById("admin-public-blocked").style.display = "flex";
+      document.getElementById("admin-auth-overlay").style.display = "none";
+      document.getElementById("admin-dashboard-root").style.display = "none";
+      return;
+    }
+
+    if (sessionStorage.getItem(AUTH_KEY) === "true") {
+      showDashboard();
+    } else {
+      showLoginGate();
+    }
+  });
+
+  function showLoginGate() {
+    document.getElementById("admin-auth-overlay").style.display = "flex";
+    document.getElementById("admin-dashboard-root").style.display = "none";
+  }
+
+  function showDashboard() {
+    document.getElementById("admin-auth-overlay").style.display = "none";
+    document.getElementById("admin-dashboard-root").style.display = "block";
+    renderLogsTable();
+    startLiveLogRefresher();
+  }
+
+  function handleAdminLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById("auth-username").value.trim();
+    const pass = document.getElementById("auth-password").value.trim();
+    const errDiv = document.getElementById("auth-error");
+
+    if (user === EXPECTED_USER && pass === EXPECTED_PASS) {
+      sessionStorage.setItem(AUTH_KEY, "true");
+      errDiv.style.display = "none";
+      showDashboard();
+    } else {
+      errDiv.style.display = "block";
+    }
+  }
+
+  function handleAdminLogout() {
+    sessionStorage.removeItem(AUTH_KEY);
+    showLoginGate();
+  }
+
+  function getLogsData() {
+    try {
+      return JSON.parse(localStorage.getItem("cc_access_logs")) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function formatTimeSpent(seconds) {
+    if (!seconds || seconds <= 0) return "<span class='duration-tag'>Active 🟢</span>";
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins > 0) return `${mins}m ${secs}s`;
+    return `${secs}s`;
+  }
+
+  function renderLogsTable() {
+    const logs = getLogsData();
+    const tbody = document.getElementById("logs-tbody");
+    const search = document.getElementById("search-input").value.toLowerCase();
+    const statusFilter = document.getElementById("filter-status").value;
+    const deviceFilter = document.getElementById("filter-device").value;
+
+    const filtered = logs.filter(log => {
+      const matchSearch =
+        !search ||
+        (log.ip || "").toLowerCase().includes(search) ||
+        (log.country || "").toLowerCase().includes(search) ||
+        (log.city || "").toLowerCase().includes(search) ||
+        (log.device || "").toLowerCase().includes(search) ||
+        (log.fingerprint_id || "").toLowerCase().includes(search);
+
+      const matchStatus = !statusFilter || log.status === statusFilter;
+      const matchDevice = !deviceFilter || log.device === deviceFilter;
+
+      return matchSearch && matchStatus && matchDevice;
+    });
+
+    document.getElementById("kpi-total").textContent = logs.length;
+    document.getElementById("kpi-allowed").textContent = logs.filter(l => l.status === "Allowed").length;
+    document.getElementById("kpi-blocked").textContent = logs.filter(l => l.status === "Blocked").length;
+    
+    const totalTime = logs.reduce((acc, l) => acc + (l.time_spent_seconds || 0), 0);
+    const avgTime = logs.length ? Math.round(totalTime / logs.length) : 0;
+    document.getElementById("kpi-time").textContent = avgTime + "s";
+
+    const uniqueFps = new Set(logs.map(l => l.fingerprint_id).filter(Boolean)).size;
+    document.getElementById("kpi-fps").textContent = uniqueFps;
+
+    document.getElementById("log-count-display").textContent = filtered.length;
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:#9ca3af;">No access log entries match your criteria.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((log, index) => {
+      const statusBadge = log.status === "Allowed" 
+        ? `<span class="badge badge--allowed">🟢 Allowed</span>`
+        : `<span class="badge badge--blocked">🔴 Blocked</span>`;
+
+      const deviceBadge = log.device === "Mobile"
+        ? `<span class="badge badge--mobile">📱 Mobile</span>`
+        : `<span class="badge badge--desktop">💻 Desktop</span>`;
+
+      return `
+        <tr>
+          <td style="white-space:nowrap;font-weight:600;">${log.timestamp || 'N/A'}</td>
+          <td><span class="code-tag">${log.ip || 'N/A'}</span></td>
+          <td style="font-weight:600;">${log.country || 'N/A'} <span style="color:#9ca3af;font-size:0.78rem;">(${log.city || ''})</span></td>
+          <td>${deviceBadge}</td>
+          <td>${statusBadge} ${log.reason && log.reason !== 'N/A' ? `<br><small style="color:#fca5a5;">${log.reason}</small>` : ''}</td>
+          <td><span class="code-tag">${log.requested_page || '/'}</span></td>
+
+          <td>${formatTimeSpent(log.time_spent_seconds)}</td>
+          <td><small style="color:#d1fae5;">${log.device_specs || 'N/A'}</small></td>
+          <td><small style="color:#9ca3af;">${log.browser_os || 'N/A'}</small></td>
+          <td><span class="code-tag" style="color:#60a5fa;">${log.fingerprint_id || 'N/A'}</span></td>
+          <td><small style="color:#fbbf24;">${log.battery_screen || 'N/A'}</small></td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function startLiveLogRefresher() {
+    setInterval(() => {
+      if (sessionStorage.getItem(AUTH_KEY) === "true") {
+        renderLogsTable();
+      }
+    }, 4000);
+  }
+
+  function simulatePreset(type) {
+    if (type === 'RESET') {
+      window.setGeoSimulation(null);
+      return;
+    }
+
+    const presets = {
+      'PK_MOBILE': { enabled: true, ip: "103.255.4.1", country_name: "Pakistan", country_code: "PK", city: "Karachi", device: "Mobile" },
+      'PK_DESKTOP': { enabled: true, ip: "182.185.12.9", country_name: "Pakistan", country_code: "PK", city: "Lahore", device: "Desktop" },
+      'AUSTRALIA': { enabled: true, ip: "1.120.0.1", country_name: "Australia", country_code: "AU", city: "Sydney", device: "Desktop" },
+      'SAUDI': { enabled: true, ip: "2.88.0.1", country_name: "Saudi Arabia", country_code: "SA", city: "Riyadh", device: "Mobile" },
+      'UK_ENGLISH': { enabled: true, ip: "2.24.0.1", country_name: "United Kingdom", country_code: "GB", city: "London", device: "Desktop" }
+    };
+
+    window.setGeoSimulation(presets[type]);
+  }
+
+  function clearLogs() {
+    if (confirm("Are you sure you want to clear all access log records?")) {
+      localStorage.removeItem("cc_access_logs");
+      renderLogsTable();
+    }
+  }
+
+  function exportLogsCSV() {
+    const logs = getLogsData();
+    if (!logs.length) {
+      alert("No log entries to export.");
+      return;
+    }
+
+    const headers = ["Timestamp", "IP Address", "Country", "City", "Device Type", "Access Status", "Reason", "Requested Page", "Time Spent (s)", "Device Specs", "Browser & OS", "Fingerprint ID", "Battery & Screen"];
+    const rows = logs.map(l => [
+      `"${l.timestamp || ''}"`,
+      `"${l.ip || ''}"`,
+      `"${l.country || ''}"`,
+      `"${l.city || ''}"`,
+      `"${l.device || ''}"`,
+      `"${l.status || ''}"`,
+      `"${l.reason || ''}"`,
+      `"${l.requested_page || ''}"`,
+      l.time_spent_seconds || 0,
+      `"${l.device_specs || ''}"`,
+      `"${l.browser_os || ''}"`,
+      `"${l.fingerprint_id || ''}"`,
+      `"${l.battery_screen || ''}"`
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `cybercity_access_logs_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+</body>
+</html>

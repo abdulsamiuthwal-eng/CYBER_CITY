@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join the Future — CyberCity 2050 Citizenship</title>
+  <meta name="description" content="Apply for residency & citizenship in CyberCity 2050." />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .subpage-hero {
+      padding: 140px 6% 50px;
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.06) 0%, var(--bg-primary, #f4f7f4) 100%);
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: #041404;
+      margin: 14px 0;
+    }
+    .form-container {
+      max-width: 800px;
+      margin: 30px auto 80px;
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      color: #041404;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      background: #f9fafb;
+    }
+    .form-control:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+      background: #fff;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .status-badge-box {
+      display: none;
+      background: rgba(22, 163, 74, 0.1);
+      border: 1.5px solid #16a34a;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" class="scrolled">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">CITIZENSHIP PORTAL</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">&larr; Back to Home</a></li>
+    <li><a href="ai-core.html">AI Core</a></li>
+    <li><a href="virtual-tour.html">Virtual Tour</a></li>
+  </ul>
+</nav>
+
+<section class="subpage-hero">
+  <div class="section-tag">APPLY FOR RESIDENCY</div>
+  <h1>JOIN THE FUTURE OF HUMANITY</h1>
+  <p style="max-width: 600px; margin: 0 auto; color: #041404; font-weight: 500;">
+    Become a verified citizen of CyberCity 2050 and gain access to zero-emission transit, AI healthcare, and sustainable living.
+  </p>
+</section>
+
+<div class="form-container">
+  <form id="citizenship-form" onsubmit="handleFormSubmit(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fullname">Full Name *</label>
+        <input type="text" id="fullname" class="form-control" placeholder="e.g. Elena Rostova" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" class="form-control" placeholder="elena@future.io" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="district">Preferred District *</label>
+        <select id="district" class="form-control" required>
+          <option value="">Select District</option>
+          <option value="District 1 — Financial & AI Center">District 1 — Financial & AI Center</option>
+          <option value="District 2 — Eco Botanical Haven">District 2 — Eco Botanical Haven</option>
+          <option value="District 3 — Skyway Transit Hub">District 3 — Skyway Transit Hub</option>
+          <option value="District 4 — Energy Solar Heights">District 4 — Energy Solar Heights</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="profession">Field of Expertise *</label>
+        <select id="profession" class="form-control" required>
+          <option value="">Select Specialization</option>
+          <option value="AI & Robotics Engineer">AI & Robotics Engineer</option>
+          <option value="Clean Energy Architect">Clean Energy Architect</option>
+          <option value="Urban Farming Specialist">Urban Farming Specialist</option>
+          <option value="Bio-Health Researcher">Bio-Health Researcher</option>
+          <option value="General Resident">General Resident</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="statement">Statement of Intent</label>
+      <textarea id="statement" class="form-control" rows="4" placeholder="Briefly describe why you want to live in CyberCity 2050..."></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 1.05rem; cursor: pointer;">
+      Submit Citizenship Application &rarr;
+    </button>
+  </form>
+
+  <div id="status-badge" class="status-badge-box">
+    <div style="font-size: 2.5rem; margin-bottom: 8px;">🎉</div>
+    <h3 style="color: #14532d; font-family: var(--font-heading); margin-bottom: 6px;">APPLICATION SUBMITTED SUCCESSFULLY!</h3>
+    <p style="color: #166534; font-size: 0.95rem; margin-bottom: 12px;">Your Quantum AI Passport Code has been generated:</p>
+    <div id="passport-code" style="font-family: monospace; font-size: 1.4rem; font-weight: 800; color: #16a34a; background: #fff; padding: 12px; border-radius: 8px; display: inline-block; border: 1px dashed #16a34a;">
+      CC2050-PASS-8849-X
+    </div>
+    <p style="font-size: 0.82rem; color: #4b5563; margin-top: 14px;">AI Sentinel Verification will complete within 24 hours.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 CyberCity Municipal Authority. Built for a better tomorrow.</div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      if (loader) loader.style.display = 'none';
+    }, 400);
+  });
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('fullname').value;
+    const randomPass = 'CC2050-PASS-' + Math.floor(1000 + Math.random() * 9000) + '-X';
+    document.getElementById('passport-code').textContent = randomPass;
+    document.getElementById('citizenship-form').style.display = 'none';
+    document.getElementById('status-badge').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

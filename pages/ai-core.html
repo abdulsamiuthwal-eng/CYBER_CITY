@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum AI Core — CyberCity 2050</title>
+  <meta name="description" content="Explore the Quantum AI Core managing CyberCity 2050's autonomous neural network." />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .subpage-hero {
+      padding: 140px 6% 60px;
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.06) 0%, var(--bg-primary, #f4f7f4) 100%);
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      color: #041404;
+      margin: 16px 0;
+    }
+    .ai-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 4%;
+    }
+    .ai-metric-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+    .ai-metric-val {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #16a34a;
+      margin-bottom: 6px;
+    }
+    .ai-sim-box {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+    }
+    .sim-tabs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .sim-tab-btn {
+      padding: 10px 20px;
+      border-radius: 99px;
+      border: 1.5px solid rgba(22, 163, 74, 0.3);
+      background: transparent;
+      color: #14532d;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .sim-tab-btn.active, .sim-tab-btn:hover {
+      background: #16a34a;
+      color: #fff;
+      border-color: #16a34a;
+    }
+    .sim-display {
+      background: #091a09;
+      color: #86efac;
+      border-radius: 12px;
+      padding: 24px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      min-height: 180px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" class="scrolled">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">QUANTUM AI CORE</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">&larr; Back to Home</a></li>
+    <li><a href="join-future.html">Apply for Citizenship</a></li>
+    <li><a href="virtual-tour.html">Virtual Tour</a></li>
+  </ul>
+</nav>
+
+<section class="subpage-hero">
+  <div class="section-tag">DECENTRALIZED NEURAL NETWORK</div>
+  <h1>QUANTUM AI CORE ENGINE</h1>
+  <p style="max-width: 650px; margin: 0 auto; color: #041404; font-weight: 500;">
+    The central intelligence of CyberCity 2050 processing over 48 billion autonomous decisions every second across all 16 smart districts.
+  </p>
+</section>
+
+<div class="ai-metrics-grid">
+  <div class="ai-metric-card">
+    <div class="ai-metric-val">99.98%</div>
+    <div style="font-weight: 700; color: #041404;">Core Network Uptime</div>
+    <div style="font-size: 0.8rem; color: #4b5563; margin-top: 4px;">Zero Downtime in 1,200 Days</div>
+  </div>
+
+  <div class="ai-metric-card">
+    <div class="ai-metric-val">48.2B</div>
+    <div style="font-weight: 700; color: #041404;">Decisions / Sec</div>
+    <div style="font-size: 0.8rem; color: #4b5563; margin-top: 4px;">Quantum Compute Nodes</div>
+  </div>
+
+  <div class="ai-metric-card">
+    <div class="ai-metric-val">0.04 ms</div>
+    <div style="font-weight: 700; color: #041404;">Avg Neural Latency</div>
+    <div style="font-size: 0.8rem; color: #4b5563; margin-top: 4px;">Instant Response Time</div>
+  </div>
+
+  <div class="ai-metric-card">
+    <div class="ai-metric-val">2,847</div>
+    <div style="font-weight: 700; color: #041404;">Active Droid Nodes</div>
+    <div style="font-size: 0.8rem; color: #4b5563; margin-top: 4px;">Self-Healing Mesh</div>
+  </div>
+</div>
+
+<section style="padding: 0 4%;">
+  <div class="ai-sim-box">
+    <h2 style="font-family: var(--font-heading); color: #041404; margin-bottom: 8px;">INTERACTIVE NEURAL SIMULATOR</h2>
+    <p style="color: #4b5563; margin-bottom: 20px;">Select a core subsystem below to observe live Quantum AI telemetry & autonomous rerouting logs.</p>
+
+    <div class="sim-tabs">
+      <button class="sim-tab-btn active" onclick="setSim('traffic')">🚄 Traffic Optimization</button>
+      <button class="sim-tab-btn" onclick="setSim('energy')">⚡ Energy Balancing</button>
+      <button class="sim-tab-btn" onclick="setSim('environment')">🌿 Air & Eco Control</button>
+      <button class="sim-tab-btn" onclick="setSim('emergency')">🛡️ Emergency Grid</button>
+    </div>
+
+    <div class="sim-display" id="sim-display">
+[SYSTEM LOG &bull; QUANTUM AI CORE 01]
+> Traffic Flow Optimizer: Active
+> Monorail Route #14: Adjusted velocity +12% for peak hours
+> Skyway Drone Grid: Congestion 0.0%
+> Autonomous EV Charging Stations: 1,420 units active
+> Status: OPTIMAL &mdash; Zero delays detected across all 16 districts.
+    </div>
+  </div>
+</section>
+
+<section style="padding: 60px 4%; text-align: center;">
+  <a href="../index.html" class="btn-primary" style="display: inline-block; text-decoration: none;">&larr; Return to Homepage</a>
+</section>
+
+<footer>
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 CyberCity Municipal Authority. Built for a better tomorrow.</div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      if (loader) loader.style.display = 'none';
+    }, 400);
+  });
+
+  const simData = {
+    traffic: `[SYSTEM LOG • QUANTUM AI CORE 01]
+> Traffic Flow Optimizer: Active
+> Monorail Route #14: Adjusted velocity +12% for peak hours
+> Skyway Drone Grid: Congestion 0.0%
+> Autonomous EV Charging Stations: 1,420 units active
+> Status: OPTIMAL — Zero delays detected across all 16 districts.`,
+
+    energy: `[SYSTEM LOG • QUANTUM AI CORE 02]
+> Quantum Energy Grid: Active
+> Solar Array #9 Output: 48.2 MW (Peak Generation)
+> Wind Turbine Farm B: Synchronized 800 units
+> District 4 Micro-battery Storage: 98.4% Capacity
+> Status: SURPLUS — Exporting 14MW clean energy to reserve grid.`,
+
+    environment: `[SYSTEM LOG • QUANTUM AI CORE 03]
+> Environmental Eco Sentinel: Active
+> Air Quality Index (AQI): 82 (Optimal / Clean Air)
+> CO2 Absorption Towers: 100% Operational
+> Bio-Dome Humidity Level: 45% (Ideal)
+> Status: STABLE — Pure oxygen levels maintained across all public sectors.`,
+
+    emergency: `[SYSTEM LOG • QUANTUM AI CORE 04]
+> Autonomous Security Sentinel: Active
+> District Surveillance Nodes: 2,847 Synced
+> Incident Threat Level: 0.00% (Zero Incidents)
+> Emergency Response Units: Standby (Avg Arrival: 42 seconds)
+> Status: SECURE — 1,000 Consecutive Days of Zero Crime.`
+  };
+
+  function setSim(type) {
+    document.querySelectorAll('.sim-tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('sim-display').textContent = simData[type];
+  }
+</script>
+
+</body>
+</html>

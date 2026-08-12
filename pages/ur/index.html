@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سائبر سٹی 2050 — مستقبل کا شہر</title>
+  <meta name="description" content="سائبر سٹی 2050: مصنوعی ذہانت سے لیس، مکمل طور پر منسلک اور پاک توانائی پر مبنی سمارٹ شہر۔" />
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: right; }
+    .hero-buttons { justify-content: flex-start; }
+    .footer-links { direction: ltr; }
+  </style>
+</head>
+<body>
+
+<!-- SVG Icon Sprite (hidden, inline) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="cc-icons">
+  <defs>
+    <symbol id="icon-leaf" viewBox="0 0 32 32" fill="none">
+      <path d="M16 3 C8 3 3 10 4 19 C5 25 10 29 16 29 C22 29 28 24 28 18 C28 10 22 3 16 3 Z" fill="currentColor" opacity="0.15"/>
+      <path d="M16 3 C8 3 3 10 4 19 C5 25 10 29 16 29 C22 29 28 24 28 18 C28 10 22 3 16 3 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <line x1="16" y1="3" x2="16" y2="29" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <path d="M16 10 L10 15" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <path d="M16 14 L10 19" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <path d="M16 18 L11 23" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <path d="M16 10 L22 15" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <path d="M16 14 L22 19" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <path d="M16 18 L21 23" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
+      <circle cx="22" cy="15" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-people" viewBox="0 0 32 32" fill="none">
+      <circle cx="11" cy="9" r="4" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4 26 C4 20 7 17 11 17 C13 17 15 18 16.5 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="21" cy="9" r="4" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M28 26 C28 20 25 17 21 17 C19 17 17.5 18 16.5 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M13.5 4.5 A5 5 0 0 1 18.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      <line x1="4" y1="28" x2="28" y2="28" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+    </symbol>
+    <symbol id="icon-bolt" viewBox="0 0 32 32" fill="none">
+      <path d="M16 2 L24 7 L24 17 L16 22 L8 17 L8 7 Z" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+      <path d="M19 3 L11 16 L16 16 L13 29 L21 15 L16 15 Z" fill="currentColor" opacity="0.2"/>
+      <path d="M19 3 L11 16 L16 16 L13 29 L21 15 L16 15 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="7" cy="12" r="1.5" fill="currentColor" opacity="0.5"/>
+      <circle cx="25" cy="12" r="1.5" fill="currentColor" opacity="0.5"/>
+      <circle cx="7" cy="20" r="1" fill="currentColor" opacity="0.3"/>
+      <circle cx="25" cy="20" r="1" fill="currentColor" opacity="0.3"/>
+    </symbol>
+    <symbol id="icon-robot" viewBox="0 0 32 32" fill="none">
+      <line x1="16" y1="2" x2="16" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="16" cy="2" r="1.5" fill="currentColor"/>
+      <rect x="6" y="7" width="20" height="16" rx="4" stroke="currentColor" stroke-width="1.8"/>
+      <rect x="9" y="11" width="5" height="4" rx="1" fill="currentColor" opacity="0.2"/>
+      <rect x="9" y="11" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="18" y="11" width="5" height="4" rx="1" fill="currentColor" opacity="0.2"/>
+      <rect x="18" y="11" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="11.5" cy="13" r="1.2" fill="currentColor"/>
+      <circle cx="20.5" cy="13" r="1.2" fill="currentColor"/>
+      <line x1="10" y1="19.5" x2="14" y2="19.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="11" y1="21" x2="13" y2="21" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <rect x="13" y="23" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10 26 L6 30 L26 30 L22 26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-seedling" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3" opacity="0.35"/>
+      <path d="M16 26 L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M16 18 C13 16 9 17 9 21 C9 21 13 22 16 18 Z" fill="currentColor" opacity="0.2"/>
+      <path d="M16 18 C13 16 9 17 9 21 C9 21 13 22 16 18 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M16 14 C19 12 23 13 23 17 C23 17 19 18 16 14 Z" fill="currentColor" opacity="0.2"/>
+      <path d="M16 14 C19 12 23 13 23 17 C23 17 19 18 16 14 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M10 26 Q13 28 16 26 Q19 24 22 26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="4" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="16" x2="26" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="4" y1="16" x2="6" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-train" viewBox="0 0 32 32" fill="none">
+      <line x1="2" y1="14" x2="8" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      <line x1="2" y1="17" x2="6" y2="17" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+      <line x1="2" y1="20" x2="8" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      <path d="M8 10 L26 10 Q30 10 30 14 L30 22 Q30 24 28 24 L8 24 Q5 24 5 21 L5 13 Q5 10 8 10 Z" fill="currentColor" opacity="0.1"/>
+      <path d="M8 10 L26 10 Q30 10 30 14 L30 22 Q30 24 28 24 L8 24 Q5 24 5 21 L5 13 Q5 10 8 10 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <rect x="8" y="12.5" width="5" height="5" rx="1.5" fill="currentColor" opacity="0.15"/>
+      <rect x="8" y="12.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="15" y="12.5" width="5" height="5" rx="1.5" fill="currentColor" opacity="0.15"/>
+      <rect x="15" y="12.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="22" y="12.5" width="5" height="5" rx="1.5" fill="currentColor" opacity="0.15"/>
+      <rect x="22" y="12.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <line x1="2" y1="26" x2="30" y2="26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="2" y1="28" x2="30" y2="28" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.4"/>
+    </symbol>
+    <symbol id="icon-shield" viewBox="0 0 32 32" fill="none">
+      <path d="M16 2 L28 7 L28 17 C28 23 22 28 16 30 C10 28 4 23 4 17 L4 7 Z" fill="currentColor" opacity="0.08"/>
+      <path d="M16 2 L28 7 L28 17 C28 23 22 28 16 30 C10 28 4 23 4 17 L4 7 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M16 8 L21 11 L21 17 L16 20 L11 17 L11 11 Z" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+      <line x1="8" y1="16" x2="24" y2="16" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2" opacity="0.4"/>
+      <path d="M11.5 16 L14.5 19 L20.5 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-city" viewBox="0 0 32 32" fill="none">
+      <line x1="2" y1="28" x2="30" y2="28" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="2" y="18" width="5" height="10" fill="currentColor" opacity="0.1"/>
+      <rect x="2" y="18" width="5" height="10" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="8" y="13" width="6" height="15" fill="currentColor" opacity="0.1"/>
+      <rect x="8" y="13" width="6" height="15" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="9.5" y="15" width="2" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="12.5" y="15" width="1" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="15" y="7" width="7" height="21" fill="currentColor" opacity="0.12"/>
+      <rect x="15" y="7" width="7" height="21" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="18.5" y1="7" x2="18.5" y2="2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="18.5" cy="2" r="1.2" fill="currentColor"/>
+      <rect x="16.5" y="9" width="2" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="19.5" y="9" width="1.5" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="16.5" y="13" width="2" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="19.5" y="13" width="1.5" height="2" fill="currentColor" opacity="0.5"/>
+      <rect x="23" y="16" width="7" height="12" fill="currentColor" opacity="0.1"/>
+      <rect x="23" y="16" width="7" height="12" stroke="currentColor" stroke-width="1.2"/>
+    </symbol>
+    <symbol id="icon-globe" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.8"/>
+      <ellipse cx="16" cy="16" rx="13" ry="5" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+      <ellipse cx="16" cy="16" rx="7" ry="13" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+      <line x1="16" y1="3" x2="16" y2="29" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity="0.3"/>
+      <ellipse cx="16" cy="11" rx="11" ry="3" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+      <ellipse cx="16" cy="21" rx="11" ry="3" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+      <circle cx="10" cy="11" r="2" fill="currentColor"/>
+      <circle cx="22" cy="11" r="2" fill="currentColor"/>
+      <circle cx="8" cy="19" r="2" fill="currentColor"/>
+      <circle cx="24" cy="19" r="2" fill="currentColor"/>
+      <circle cx="16" cy="8" r="2" fill="currentColor"/>
+      <line x1="10" y1="11" x2="22" y2="11" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+      <line x1="10" y1="11" x2="8" y2="19" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+      <line x1="22" y1="11" x2="24" y2="19" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+      <line x1="8" y1="19" x2="24" y2="19" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+      <line x1="16" y1="8" x2="10" y2="11" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+      <line x1="16" y1="8" x2="22" y2="11" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2 L20 6 L20 14 C20 18 16 21 12 22 C8 21 4 18 4 14 L4 6 Z" fill="currentColor" opacity="0.1"/>
+      <path d="M12 2 L20 6 L20 14 C20 18 16 21 12 22 C8 21 4 18 4 14 L4 6 Z" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 12 L11 15 L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-play" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1" stroke-dasharray="5 4" opacity="0.25"/>
+      <circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="16" cy="16" r="11" fill="currentColor" opacity="0.08"/>
+      <path d="M13 11 L23 16 L13 21 Z" fill="currentColor" opacity="0.3"/>
+      <path d="M13 11 L23 16 L13 21 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== LOADER ===== -->
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050 (اردو)</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg class="cc-icon" aria-hidden="true"><use href="#icon-leaf"/></svg>
+    </div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">مستقبل کا شہر — پاکستان</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#hero" class="active">ہوم</a></li>
+    <li><a href="#city-video-section">ریئل</a></li>
+    <li><a href="#stats">ٹیلی میٹری</a></li>
+    <li><a href="#systems">شہری نظام</a></li>
+    <li><a href="#showcase">ذیلی خدمات</a></li>
+    <li><a href="#news">خبریں</a></li>
+  </ul>
+
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="../join-future.html" class="nav-btn" style="text-decoration:none;">مستقبل میں شامل ہوں</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===== HERO SECTION ===== -->
+<section id="hero">
+  <div class="hero-bg">
+    <img src="../../assets/images/hero-skyline.png" alt="CyberCity 2050 Skyline" />
+  </div>
+
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay-bottom"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      لائیو &bull; تمام شہری نظام فعال ہیں
+    </div>
+
+    <h1 class="hero-title">سائبر<span>سٹی</span></h1>
+    <div class="hero-year">2 0 5 0</div>
+
+    <p class="hero-desc">
+      مستقبل کا تجربہ کریں۔ مصنوعی ذہانت سے لیس، مکمل طور پر منسلک اور پاک توانائی پر مبنی ایک جدید سمارٹ شہر جہاں ٹیکنالوجی پائیداری سے ملتی ہے۔
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#systems" class="btn-primary">شہر دیکھئے &rarr;</a>
+      <button id="watch-trailer-btn" class="btn-secondary">
+        <svg class="cc-icon cc-icon--sm" aria-hidden="true"><use href="#icon-play"/></svg>
+        ٹریلر دیکھیں
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
+    <span>اسکرول کریں</span>
+  </div>
+</section>
+
+<!-- ===== FULL-SCREEN CITY VIDEO SHOWCASE SECTION ===== -->
+<section id="city-video-section">
+  <div class="video-showcase-box">
+    <video id="section-video-1" class="showcase-video active" src="../../assets/videos/Initial_Scene_-_2026-08-12_202608121522.mp4" autoplay muted playsinline preload="auto"></video>
+    <video id="section-video-2" class="showcase-video" src="../../assets/videos/Initial_Scene_-_2026-08-12_202608121522_2.mp4" muted playsinline preload="auto"></video>
+    
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, #f4f7f4 0%, transparent 20%, transparent 80%, #f4f7f4 100%);pointer-events:none;z-index:2;"></div>
+    
+    <div class="video-showcase-badge" style="position:absolute;top:40px;right:5%;z-index:5;">
+      <span class="live-dot"></span>
+      سائبر سٹی متحرک حالت میں — 24/7 خودکار لائیو سٹریمنگ
+    </div>
+    
+    <div style="position:absolute;bottom:50px;right:5%;z-index:5;max-width:550px;" class="reveal">
+      <div class="section-tag" style="background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);">فل سکرین لائیو ویڈیو</div>
+      <h2 style="font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,3.2rem);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.6);line-height:1.1;margin:10px 0;">سائبر سٹی حرکت میں</h2>
+      <p style="color:rgba(255,255,255,0.9);font-size:1rem;text-shadow:0 2px 10px rgba(0,0,0,0.6);font-weight:300;">مصنوعی ذہانت اور پاک توانائی پر مبنی سمارٹ شہر کے خودکار آپریشنز کا تجربہ کریں۔</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS TELEMETRY ===== -->
+<section id="stats">
+  <div class="section-header reveal">
+    <div class="section-tag">لائیو ٹیلی میٹری</div>
+    <h2 class="section-title">شہر کی موجودہ صورتحال</h2>
+    <p class="section-desc">تمام شہری نظام اپنی بہترین کارکردگی پر کام کر رہے ہیں۔ AI مسلسل ہر عنصر کی نگرانی کرتا ہے۔</p>
+  </div>
+
+  <div class="live-bar reveal">
+    <span class="live-dot"></span>
+    براہ راست ڈیٹا فیڈ &mdash; ہر 30 سیکنڈ بعد اپ ڈیٹ کیا جاتا ہے
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card reveal reveal-delay-1">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="Population"><use href="#icon-people"/></svg>
+      </span>
+      <div class="stat-value" data-target="8400000">0</div>
+      <div class="stat-label">کل آبادی</div>
+      <div class="stat-sub">کل سے +2.3% اضافہ</div>
+    </div>
+
+    <div class="stat-card reveal reveal-delay-2">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="Renewable Energy"><use href="#icon-bolt"/></svg>
+      </span>
+      <div class="stat-value" data-target="94" data-suffix="%">0</div>
+      <div class="stat-label">قابل تجدید توانائی</div>
+      <div class="stat-sub">مکمل طور پر پائیدار</div>
+    </div>
+
+    <div class="stat-card reveal reveal-delay-3">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="AI Droids"><use href="#icon-robot"/></svg>
+      </span>
+      <div class="stat-value" data-target="12450">0</div>
+      <div class="stat-label">فعال AI ڈرائڈز</div>
+      <div class="stat-sub">100% فعال</div>
+    </div>
+
+    <div class="stat-card reveal reveal-delay-4">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="Air Quality"><use href="#icon-seedling"/></svg>
+      </span>
+      <div class="stat-value" data-target="82" data-suffix=" AQI">0</div>
+      <div class="stat-label">ہوا کی کوالٹی</div>
+      <div class="stat-sub">بہترین / مثالی</div>
+    </div>
+
+    <div class="stat-card reveal reveal-delay-5">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="Avg Commute"><use href="#icon-train"/></svg>
+      </span>
+      <div class="stat-value" data-target="42" data-suffix=" منٹ">0</div>
+      <div class="stat-label">اوسط سفر کا وقت</div>
+      <div class="stat-sub">زیرو ٹریفک بلاک</div>
+    </div>
+
+    <div class="stat-card reveal reveal-delay-1">
+      <span class="stat-icon">
+        <svg class="cc-icon cc-icon--lg" aria-label="Safety Index"><use href="#icon-shield"/></svg>
+      </span>
+      <div class="stat-value" data-target="99.2" data-suffix="%">0</div>
+      <div class="stat-label">تحفظ انڈیکس</div>
+      <div class="stat-sub">مکمل محفوظ</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CITY SYSTEMS ===== -->
+<section id="systems">
+  <div class="section-header reveal">
+    <div class="section-tag">شہری انفراسٹرکچر</div>
+    <h2 class="section-title">شہری نظام کی تلاش کریں</h2>
+    <p class="section-desc">مستقبل کے شہر کو چلانے کے لیے چھ باہم منسلک ذہین سمارٹ سسٹمز۔</p>
+  </div>
+
+  <div class="systems-grid">
+    <div class="system-card reveal reveal-delay-1">
+      <img src="../../assets/images/smart-transport.png" alt="Smart Transport" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="Smart Transport"><use href="#icon-train"/></svg>
+        </span>
+        <div class="system-card-title">سمارٹ ٹرانسپورٹ</div>
+        <p class="system-card-desc">خودکار مونو ریل، الیکٹرک گاڑیاں اور ڈرون ٹیکسی جو روزانہ 8.4 ملین شہریوں کو بغیر آلودگی کے منزل تک پہنچاتی ہیں۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> فعال ہے</span>
+          <a href="../system-transport.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-card reveal reveal-delay-2">
+      <img src="../../assets/images/security.png" alt="AI Security" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="AI Security"><use href="#icon-shield"/></svg>
+        </span>
+        <div class="system-card-title">مصنوعی ذہانت کی سیکیورٹی</div>
+        <p class="system-card-desc">اعصابی نیٹ ورکس کے ذریعے جدید ترین خطرے کی شناخت اور نگرانی۔ تمام 16 اضلاع میں 99.2٪ درستگی کے ساتھ لائیو سیکیورٹی۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> محفوظ</span>
+          <a href="../system-security.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-card reveal reveal-delay-3">
+      <img src="../../assets/images/energy-grid.png" alt="Energy Grid" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="Energy Grid"><use href="#icon-bolt"/></svg>
+        </span>
+        <div class="system-card-title">توانائی کا سمارٹ گرڈ</div>
+        <p class="system-card-desc">40,000 سے زائد سولر پینلز اور 800 ونڈ ٹربائنز سے 94٪ قابل تجدید توانائی۔ کبھی بجلی منقطع نہیں ہوتی۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> 94% قابل تجدید</span>
+          <a href="../system-energy.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-card reveal reveal-delay-4">
+      <img src="../../assets/images/environment.png" alt="Environment" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="Environment"><use href="#icon-seedling"/></svg>
+        </span>
+        <div class="system-card-title">ماحولیاتی تحفظ</div>
+        <p class="system-card-desc">2,000 سے زیادہ سینسرز ہوا، پانی اور مٹی کی کوالٹی کی 24/7 نگرانی کرتے ہیں اور ماحولیاتی توازن برقرار رکھتے ہیں۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> AQI 82 مثالی</span>
+          <a href="../system-environment.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-card reveal reveal-delay-5">
+      <img src="../../assets/images/aerial-view.png" alt="Smart Buildings" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="Smart Buildings"><use href="#icon-city"/></svg>
+        </span>
+        <div class="system-card-title">سمارٹ عمارتیں</div>
+        <p class="system-card-desc">سائبر سٹی 2050 کی ہر عمارت مقیم افراد کے رویے سے سیکھتی ہے۔ توانائی کا استعمال 68٪ تک کم ہو جاتا ہے۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> خودکار سازگار</span>
+          <a href="../system-buildings.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="system-card reveal reveal-delay-1">
+      <img src="../../assets/images/hero-skyline.png" alt="City Network" class="system-card-img" />
+      <div class="system-card-body">
+        <span class="system-card-icon">
+          <svg class="cc-icon cc-icon--xl" aria-label="City Network"><use href="#icon-globe"/></svg>
+        </span>
+        <div class="system-card-title">شہری 6G نیٹ ورک</div>
+        <p class="system-card-desc">6G میش نیٹ ورک ہر مربع میٹر کا احاطہ کرتا ہے۔ 2,847 AI نوڈز فوراً بات چیت کرتے ہیں۔ شہر کا دماغ کبھی نہیں سوتا۔</p>
+        <div class="system-card-footer">
+          <span class="system-status"><span class="system-status-dot"></span> 6G فعال ہے</span>
+          <a href="../system-network.html" class="system-link">نظام دیکھیں &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SHOWCASE AI SERVICES ===== -->
+<section id="showcase">
+  <div class="showcase-inner">
+    <div class="showcase-img-wrap reveal">
+      <img src="../../assets/images/aerial-view.png" alt="CyberCity 2050 Operations" />
+      <div class="showcase-badge-box">
+        <div class="showcase-badge-val">99.8%</div>
+        <div class="showcase-badge-label">AI نیٹ ورک اپ ٹائم</div>
+      </div>
+    </div>
+
+    <div class="showcase-text reveal">
+      <span class="section-tag">کوائینٹم AI خدمات</span>
+      <h2>کوائنٹم AI سے لیس شہر</h2>
+      <p>سائبر سٹی 2050 ایک غیر مرکزی اعصابی نیٹ ورک کے ذریعے منظم کیا جاتا ہے۔ ہر شہری کے تحفظ اور آرام کے لیے ہر سیکنڈ ملینز ڈیٹا پوائنٹس پروسیس ہوتے ہیں۔</p>
+
+      <ul class="feature-list">
+        <li>
+          <span class="check-icon">
+            <svg class="cc-icon cc-icon--sm" aria-hidden="true"><use href="#icon-check"/></svg>
+          </span>
+          خودکار ٹریفک اور ٹرانزٹ مینجمنٹ
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg class="cc-icon cc-icon--sm" aria-hidden="true"><use href="#icon-check"/></svg>
+          </span>
+          پیشگوئی پر مبنی توانائی کی منصفانہ تقسیم
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg class="cc-icon cc-icon--sm" aria-hidden="true"><use href="#icon-check"/></svg>
+          </span>
+          ہوا کی کوالٹی اور ماحولیات کی خودکار بہتری
+        </li>
+        <li>
+          <span class="check-icon">
+            <svg class="cc-icon cc-icon--sm" aria-hidden="true"><use href="#icon-check"/></svg>
+          </span>
+          اعصابی نیٹ ورک پر مبنی ایمرجنسی رسپانس
+        </li>
+      </ul>
+
+      <a href="../ai-core.html" class="btn-primary" style="text-decoration:none;display:inline-block;">AI کور کے بارے میں جانیں &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWS ===== -->
+<section id="news">
+  <div class="section-header reveal">
+    <div class="section-tag">شہر کی تازہ ترین خبریں</div>
+    <h2 class="section-title">تازہ ترین اپ ڈیٹس</h2>
+    <p class="section-desc">سائبر سٹی 2050 کی جدید ترین پیش رفتوں سے باخبر رہیں۔</p>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card reveal reveal-delay-1">
+      <div class="news-date">12 اگست 2050</div>
+      <div class="news-title">نیا سکائی وے ڈرون راہداری کا افتتاح</div>
+      <p class="news-excerpt">ڈسٹرکٹ 4 نے 200 نئے خودکار ڈرون لینڈنگ پیڈز کے ساتھ فضائی ٹرانزٹ میں توسیع کی، ترسیل کا وقت 3 منٹ سے کم ہوگیا۔</p>
+      <a href="../news-drone-corridor.html" class="news-link">مزید پڑھیں &rarr;</a>
+    </div>
+
+    <div class="news-card reveal reveal-delay-2">
+      <div class="news-date">10 اگست 2050</div>
+      <div class="news-title">سولر اری 9 کی ریکارڈ پیداوار</div>
+      <p class="news-excerpt">اگلی نسل کے کوائنٹم سولر سیلز نے 48٪ کارکردگی حاصل کی، جو 100,000 الیکٹرک گاڑیوں کو چارج کرنے کے لیے کافی ہے۔</p>
+      <a href="../news-solar-array.html" class="news-link">مزید پڑھیں &rarr;</a>
+    </div>
+
+    <div class="news-card reveal reveal-delay-3">
+      <div class="news-date">05 اگست 2050</div>
+      <div class="news-title">زیرو کرائم کے 1000 دن مکمل</div>
+      <p class="news-excerpt">AI سیکیورٹی سینٹینلز نے تمام 16 اضلاع میں بغیر کسی سنگین واقعے کے مسلسل 1,000 دن مکمل ہونے کا جشن منایا۔</p>
+      <a href="../news-zero-crime.html" class="news-link">مزید پڑھیں &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="cta">
+  <div class="cta-box reveal">
+    <h2>کیا آپ مستقبل کا تجربہ کرنے کے لیے تیار ہیں؟</h2>
+    <p>دنیا کے جدید ترین سمارٹ شہر میں رہنے والے لاکھوں شہریوں میں شامل ہوں۔ آج ہی ورچوئل ٹور کا وقت لیں یا شہریت کے لیے درخواست دیں۔</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="../virtual-tour.html" class="btn-primary" style="text-decoration:none;">ورچوئل ٹور کا وقت لیں &rarr;</a>
+      <a href="../join-future.html" class="btn-secondary" style="text-decoration:none;">شہریت کی درخواست دیں</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 سائبر سٹی میونسپل اتھارٹی — تمام حقوق محفوظ ہیں۔</div>
+  <ul class="footer-links">
+    <li><a href="#hero">ہوم</a></li>
+    <li><a href="#systems">نظام</a></li>
+    <li><a href="#cta">رابطہ</a></li>
+  </ul>
+</footer>
+
+<!-- ===== TRAILER MODAL ===== -->
+<div id="trailer-modal" class="trailer-modal">
+  <div class="trailer-modal-backdrop" id="trailer-modal-close"></div>
+  <div class="trailer-modal-content">
+    <button class="trailer-close-btn" id="trailer-close-btn">&times;</button>
+    <div class="trailer-video-box">
+      <video id="hero-video-1" class="hero-video active" src="../../assets/videos/Initial_Scene_-_2026-08-12_202608121522.mp4" muted playsinline preload="auto"></video>
+      <video id="hero-video-2" class="hero-video" src="../../assets/videos/Initial_Scene_-_2026-08-12_202608121522_2.mp4" muted playsinline preload="auto"></video>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/js/app.js"></script>
+</body>
+</html>

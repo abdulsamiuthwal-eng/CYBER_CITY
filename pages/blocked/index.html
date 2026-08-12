@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Restricted — CyberCity 2050</title>
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <style>
+    .blocked-box {
+      max-width: 700px;
+      margin: 120px auto 60px;
+      background: #fff;
+      border: 1.5px solid #ef4444;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(239, 68, 68, 0.12);
+    }
+    .blocked-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+    .blocked-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      color: #991b1b;
+      margin-bottom: 12px;
+    }
+    .blocked-desc {
+      color: #374151;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .sim-panel {
+      max-width: 700px;
+      margin: 0 auto 80px;
+      background: #f9fafb;
+      border: 1.5px solid #d1d5db;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .sim-btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .sim-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #16a34a;
+      background: #fff;
+      color: #14532d;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .sim-btn:hover {
+      background: #16a34a;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" class="scrolled">
+  <a href="../../index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">ACCESS RESTRICTION SYSTEM</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../admin/index.html">Admin Dashboard</a></li>
+  </ul>
+</nav>
+
+<div class="blocked-box">
+  <div class="blocked-icon">🚫</div>
+  <h1 class="blocked-title">ACCESS RESTRICTED</h1>
+  <p id="reason-text" class="blocked-desc">
+    Your access to CyberCity 2050 has been restricted based on geographic or device compliance rules.
+  </p>
+
+  <div style="background: #fef2f2; border: 1px solid #fca5a5; padding: 16px; border-radius: 12px; font-size: 0.88rem; color: #991b1b; text-align: left; margin-bottom: 24px;">
+    <strong>Rule Enforced:</strong> <span id="rule-detail">Detecting restriction parameters...</span><br/>
+    <strong>Visitor IP:</strong> <span id="visitor-ip">Checking...</span><br/>
+    <strong>Logged Status:</strong> <span style="font-weight: 700;">Blocked (Logged to Access DB)</span>
+  </div>
+
+  <a href="../../admin/index.html" class="btn-primary" style="text-decoration:none; display:inline-block;">Open Admin Dashboard &rarr;</a>
+</div>
+
+<div class="sim-panel">
+  <h3 style="font-family: var(--font-heading); color: #041404; font-size: 1.05rem;">🧪 ASSIGNMENT TESTING & SIMULATION PANEL</h3>
+  <p style="font-size: 0.82rem; color: #6b7280; margin-top: 4px;">Click any button below to instantly simulate visitor regions/devices:</p>
+  
+  <div class="sim-btn-group">
+    <button class="sim-btn" onclick="testSim('PK', 'Pakistan', 'Mobile', 'Lahore')">🇵🇰 Pakistan (Mobile Allowed)</button>
+    <button class="sim-btn" onclick="testSim('PK', 'Pakistan', 'Desktop', 'Lahore')">🇵🇰 Pakistan (Desktop Blocked)</button>
+    <button class="sim-btn" onclick="testSim('AU', 'Australia', 'Desktop', 'Sydney')">🇦🇺 Australia (Blocked)</button>
+    <button class="sim-btn" onclick="testSim('SA', 'Saudi Arabia', 'Desktop', 'Riyadh')">🇸🇦 Saudi Arabia (Arabic)</button>
+    <button class="sim-btn" onclick="testSim('GB', 'United Kingdom', 'Desktop', 'London')">🇬🇧 UK (English)</button>
+    <button class="sim-btn" onclick="resetSim()" style="border-color:#6b7280; color:#374151;">🔄 Reset Real Detection</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 CyberCity Municipal Authority. Built for a better tomorrow.</div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      if (loader) loader.style.display = 'none';
+    }, 400);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const reason = urlParams.get('reason');
+    const country = urlParams.get('country') || 'Restricted Region';
+    const device = urlParams.get('device') || 'Desktop';
+
+    if (reason === 'device_restricted') {
+      document.getElementById('reason-text').textContent = 'CyberCity 2050 access from Pakistan is restricted to MOBILE DEVICES ONLY. You are accessing via a ' + device + '.';
+      document.getElementById('rule-detail').textContent = 'Task 2 — Pakistan Region Device Rule (Mobile Only Allowed)';
+    } else if (reason === 'country_blocked') {
+      document.getElementById('reason-text').textContent = 'Access to CyberCity 2050 is not available in ' + country + ' due to regional regulations.';
+      document.getElementById('rule-detail').textContent = 'Task 1 — Geographic Restriction Rule (' + country + ' Blocked)';
+    } else {
+      document.getElementById('rule-detail').textContent = 'Geographic or Device Restriction Enforced';
+    }
+
+    // Try fetching IP
+    fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
+      document.getElementById('visitor-ip').textContent = data.ip || '182.185.120.4';
+    }).catch(() => {
+      document.getElementById('visitor-ip').textContent = '182.185.120.4';
+    });
+  });
+
+  function testSim(code, name, device, city) {
+    const config = {
+      enabled: true,
+      country_code: code,
+      country_name: name,
+      device: device,
+      city: city,
+      ip: '182.185.' + Math.floor(Math.random()*200) + '.4'
+    };
+    localStorage.setItem('cc_geo_simulation', JSON.stringify(config));
+    window.location.href = '../../index.html';
+  }
+
+  function resetSim() {
+    localStorage.removeItem('cc_geo_simulation');
+    window.location.href = '../../index.html';
+  }
+</script>
+</body>
+</html>

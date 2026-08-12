@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule Virtual Tour — CyberCity 2050</title>
+  <meta name="description" content="Experience CyberCity 2050 with an interactive virtual 3D tour." />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .subpage-hero {
+      padding: 140px 6% 50px;
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.06) 0%, var(--bg-primary, #f4f7f4) 100%);
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: #041404;
+      margin: 14px 0;
+    }
+    .tour-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 4%;
+    }
+    .tour-card {
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s ease;
+    }
+    .tour-card:hover {
+      transform: translateY(-6px);
+    }
+    .tour-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .tour-card-body {
+      padding: 20px;
+    }
+    .booking-box {
+      max-width: 750px;
+      margin: 40px auto 80px;
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">CYBERCITY 2050</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" class="scrolled">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">VIRTUAL TOUR PORTAL</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">&larr; Back to Home</a></li>
+    <li><a href="ai-core.html">AI Core</a></li>
+    <li><a href="join-future.html">Apply for Citizenship</a></li>
+  </ul>
+</nav>
+
+<section class="subpage-hero">
+  <div class="section-tag">360° IMMERSIVE EXPERIENCE</div>
+  <h1>SCHEDULE YOUR VIRTUAL TOUR</h1>
+  <p style="max-width: 600px; margin: 0 auto; color: #041404; font-weight: 500;">
+    Immerse yourself in CyberCity 2050 before moving. Experience autonomous transport, solar towers, and bio-domes in real-time 3D.
+  </p>
+</section>
+
+<div class="tour-grid">
+  <div class="tour-card">
+    <img src="../assets/images/hero-skyline.png" alt="Aerial Skyline Tour" />
+    <div class="tour-card-body">
+      <h3 style="font-family: var(--font-heading); color: #041404; font-size: 1.1rem; margin-bottom: 8px;">AERIAL SKYLINE TOUR</h3>
+      <p style="font-size: 0.85rem; color: #4b5563; line-height: 1.6;">Fly through District 1 & 4 with autonomous drone cameras offering 8K live feeds.</p>
+    </div>
+  </div>
+
+  <div class="tour-card">
+    <img src="../assets/images/smart-transport.png" alt="Smart Monorail Experience" />
+    <div class="tour-card-body">
+      <h3 style="font-family: var(--font-heading); color: #041404; font-size: 1.1rem; margin-bottom: 8px;">SMART MONORAIL RIDE</h3>
+      <p style="font-size: 0.85rem; color: #4b5563; line-height: 1.6;">Experience zero-noise, high-speed magnetic levitation across all 16 city sectors.</p>
+    </div>
+  </div>
+
+  <div class="tour-card">
+    <img src="../assets/images/energy-grid.png" alt="Solar & Wind Array Tour" />
+    <div class="tour-card-body">
+      <h3 style="font-family: var(--font-heading); color: #041404; font-size: 1.1rem; margin-bottom: 8px;">QUANTUM ENERGY GRID</h3>
+      <p style="font-size: 0.85rem; color: #4b5563; line-height: 1.6;">Walk through 40,000+ solar panels and clean energy distribution centers.</p>
+    </div>
+  </div>
+</div>
+
+<div class="booking-box">
+  <h2 style="font-family: var(--font-heading); color: #041404; margin-bottom: 10px; text-align: center;">BOOK YOUR VIRTUAL TOUR SLOT</h2>
+  <p style="color: #4b5563; text-align: center; margin-bottom: 24px;">Select your preferred date and VR headset compatibility.</p>
+
+  <form id="tour-form" onsubmit="handleTourSubmit(event)">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+      <div>
+        <label style="display: block; font-weight: 700; color: #041404; margin-bottom: 8px;">Select Date</label>
+        <input type="date" class="form-control" style="width:100%; padding:12px; border:1.5px solid #d1d5db; border-radius:10px;" required />
+      </div>
+
+      <div>
+        <label style="display: block; font-weight: 700; color: #041404; margin-bottom: 8px;">VR / Display Mode</label>
+        <select class="form-control" style="width:100%; padding:12px; border:1.5px solid #d1d5db; border-radius:10px;" required>
+          <option value="Browser 3D View">Web 3D Browser View</option>
+          <option value="Apple Vision Pro">Apple Vision Pro VR</option>
+          <option value="Meta Quest 3">Meta Quest 3 VR</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 1.05rem; cursor: pointer;">
+      Confirm Virtual Tour Reservation &rarr;
+    </button>
+  </form>
+
+  <div id="tour-confirm" style="display: none; background: rgba(22, 163, 74, 0.1); border: 1.5px solid #16a34a; border-radius: 12px; padding: 24px; text-align: center; margin-top: 20px;">
+    <div style="font-size: 2.2rem; margin-bottom: 6px;">🎟️</div>
+    <h3 style="color: #14532d; font-family: var(--font-heading);">VIRTUAL TOUR RESERVED!</h3>
+    <p style="color: #166534; font-size: 0.95rem;">Your VR Access Link & Passcode have been sent to your email.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 CyberCity Municipal Authority. Built for a better tomorrow.</div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      if (loader) loader.style.display = 'none';
+    }, 400);
+  });
+
+  function handleTourSubmit(e) {
+    e.preventDefault();
+    document.getElementById('tour-form').style.display = 'none';
+    document.getElementById('tour-confirm').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
