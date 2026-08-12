@@ -518,6 +518,7 @@
     <table>
       <thead>
         <tr>
+          <th class="primary-col" style="width:40px;text-align:center;">S.No</th>
           <th class="primary-col">#1 Timestamp</th>
           <th class="primary-col">#2 IP Address</th>
           <th class="primary-col">#3 Country & City</th>
@@ -713,7 +714,7 @@
     document.getElementById("log-count-display").textContent = filtered.length;
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:#9ca3af;">No access log entries match your criteria.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px;color:#9ca3af;">No access log entries match your criteria.</td></tr>`;
       return;
     }
 
@@ -728,6 +729,7 @@
 
       return `
         <tr oncontextmenu="showContextMenu(event, '${log.id}', '${encodeURIComponent(log.country || 'Log')}', '${encodeURIComponent(log.ip || '')}')" style="cursor:context-menu;" title="Right-click to delete log">
+          <td style="text-align:center;font-weight:700;color:#86efac;">${index + 1}</td>
           <td style="white-space:nowrap;font-weight:600;">${log.timestamp || 'N/A'}</td>
           <td><span class="code-tag">${log.ip || 'N/A'}</span></td>
           <td style="font-weight:600;">${log.country || 'N/A'} <span style="color:#9ca3af;font-size:0.78rem;">(${log.city || ''})</span></td>
@@ -810,8 +812,9 @@
       return;
     }
 
-    const headers = ["Timestamp", "IP Address", "Country", "City", "Device Type", "Access Status", "Reason", "Requested Page", "Time Spent (s)", "Device Specs", "Browser & OS", "Fingerprint ID", "Battery & Screen"];
-    const rows = combinedLogs.map(l => [
+    const headers = ["S.No", "Timestamp", "IP Address", "Country", "City", "Device Type", "Access Status", "Reason", "Requested Page", "Time Spent (s)", "Device Specs", "Browser & OS", "Fingerprint ID", "Battery & Screen"];
+    const rows = combinedLogs.map((l, index) => [
+      index + 1,
       `"${l.timestamp || ''}"`,
       `"${l.ip || ''}"`,
       `"${l.country || ''}"`,
