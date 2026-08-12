@@ -241,13 +241,20 @@
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    // Ensure session is logged once per visit session
-    let existingLogId = sessionStorage.getItem(SESSION_LOGGED_KEY);
-    let logId = existingLogId;
+    // Smart deduplication: same fingerprint on same path within 2 mins = skip
+    const existingLogs = getLogs();
+    const twoMinsAgo = Date.now() - 2 * 60 * 1000;
+    const recentDuplicate = existingLogs.find(l => 
+      l.fingerprint_id === fingerprint &&
+      l.requested_page === currentPath &&
+      new Date(l.timestamp).getTime() > twoMinsAgo
+    );
+
+    let logId = sessionStorage.getItem(SESSION_LOGGED_KEY + "_" + currentPath);
     
-    if (!existingLogId) {
+    if (!recentDuplicate && !logId) {
       logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
-      sessionStorage.setItem(SESSION_LOGGED_KEY, logId);
+      sessionStorage.setItem(SESSION_LOGGED_KEY + "_" + currentPath, logId);
 
       let batteryInfo = "N/A";
       try {
