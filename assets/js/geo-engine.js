@@ -8,7 +8,7 @@
   const SIMULATION_KEY = "cc_geo_simulation";
   const SESSION_LOGGED_KEY = "cc_logged_session_id";
   
-  // 100% Free Centralized Cloud DB Endpoint (Firebase Realtime REST DB)
+  // Active Firebase Realtime Database
   const CLOUD_DB_URL = "https://cybercity2050-logs-4cf99-default-rtdb.firebaseio.com/access_logs";
 
   // --- 1. HELPERS: LOCAL & CLOUD DB LOGGING ---
@@ -28,7 +28,7 @@
 
   function syncToCloudDB(entry) {
     try {
-      // keepalive: true prevents browser from cancelling fetch request during page redirect
+      // keepalive: true prevents browser from cancelling fetch during page redirect
       fetch(`${CLOUD_DB_URL}/${entry.id}.json`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -42,15 +42,20 @@
 
   function saveLog(entry) {
     const logs = getLogs();
-    logs.unshift(entry);
+    // Update existing entry if same ID, otherwise prepend
+    const idx = logs.findIndex(l => l.id === entry.id);
+    if (idx !== -1) {
+      logs[idx] = entry;
+    } else {
+      logs.unshift(entry);
+    }
     if (logs.length > 500) logs.pop();
     saveLogs(logs);
-
-    // Sync to Cloud DB so Admin can view global Vercel visitors on laptop
     syncToCloudDB(entry);
   }
 
   function updateSessionDuration(logId, seconds) {
+    if (!logId) return;
     const logs = getLogs();
     const index = logs.findIndex(l => l.id === logId);
     if (index !== -1) {
@@ -58,7 +63,6 @@
       saveLogs(logs);
       syncToCloudDB(logs[index]);
     } else {
-      // If not in local storage (e.g. on mobile redirect), still sync duration to Cloud DB
       syncToCloudDB({ id: logId, time_spent_seconds: seconds, last_updated: new Date().toLocaleString() });
     }
   }
@@ -173,12 +177,44 @@
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    let geoData = {
-      ip: (sim && sim.ip) ? sim.ip : "Detecting...",
-      country_name: (sim && sim.country_name) ? sim.country_name : "Pakistan",
-      country_code: (sim && sim.country_code) ? sim.country_code : "PK",
-      city: (sim && sim.city) ? sim.city : "Lahore"
-    };
+    // ⚡ FAST IP DETECTION: Race real fetch (800ms max) vs session cache
+    let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
+
+    if (sim && sim.enabled) {
+      // Simulation mode — use preset values instantly
+      geoData = {
+        ip: sim.ip || "127.0.0.1",
+        country_name: sim.country_name || "Pakistan",
+        country_code: sim.country_code || "PK",
+        city: sim.city || "Simulated"
+      };
+    } else {
+      // Check session cache first (instant, max 5 min old)
+      try {
+        const cached = JSON.parse(sessionStorage.getItem("cc_geo_cache") || "null");
+        if (cached && cached.ts > Date.now() - 300000) {
+          geoData = cached.data;
+        } else {
+          // Race: real IP fetch vs 800ms timeout
+          const ipResult = await Promise.race([
+            fetch("https://ipapi.co/json/").then(r => r.json()),
+            new Promise(resolve => setTimeout(() => resolve(null), 800))
+          ]);
+          if (ipResult && ipResult.country_code) {
+            geoData = {
+              ip: ipResult.ip || "Unknown",
+              country_name: ipResult.country_name || "Unknown",
+              country_code: ipResult.country_code || "XX",
+              city: ipResult.city || "Unknown"
+            };
+            // Cache for this session — next page will be instant
+            sessionStorage.setItem("cc_geo_cache", JSON.stringify({ ts: Date.now(), data: geoData }));
+          }
+        }
+      } catch (err) {
+        console.log("Geo API fallback:", err);
+      }
+    }
 
     const code = (geoData.country_code || "").toUpperCase();
     const country = geoData.country_name || "Unknown";
@@ -215,18 +251,10 @@
       accessStatus = "Allowed";
     }
 
-    // Smart deduplication: same fingerprint on same path within 1 min = skip
-    const existingLogs = getLogs();
-    const oneMinAgo = Date.now() - 60 * 1000;
-    const recentDuplicate = existingLogs.find(l => 
-      l.fingerprint_id === fingerprint &&
-      l.requested_page === currentPath &&
-      new Date(l.timestamp).getTime() > oneMinAgo
-    );
-
+    // Deduplication: skip if same session already logged this path
     let logId = sessionStorage.getItem(SESSION_LOGGED_KEY + "_" + currentPath);
-    
-    if (!recentDuplicate && !logId) {
+
+    if (!logId) {
       logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
       sessionStorage.setItem(SESSION_LOGGED_KEY + "_" + currentPath, logId);
 
@@ -234,7 +262,7 @@
       try {
         if (navigator.getBattery) {
           const bat = await navigator.getBattery();
-          batteryInfo = Math.round(bat.level * 100) + "% " + (bat.charging ? "⚡" : "🔋");
+          batteryInfo = Math.round(bat.level * 100) + "% " + (bat.charging ? "Charging" : "Battery");
         }
       } catch (e) {}
 
@@ -264,20 +292,8 @@
         battery_screen: batteryScreen
       };
 
-      // ⚡ INSTANT 0MS SYNC TO CLOUD DB
+      // ⚡ SYNC TO FIREBASE — keepalive ensures it survives any page redirect
       saveLog(logEntry);
-
-      // Async IP fetch in background — updates log entry when ready
-      if (!sim || !sim.enabled) {
-        fetch("https://ipapi.co/json/").then(r => r.json()).then(data => {
-          if (data && data.ip) {
-            logEntry.ip = data.ip;
-            logEntry.country = (data.country_name || country) + " (" + (data.country_code || code) + ")";
-            logEntry.city = data.city || geoData.city;
-            saveLog(logEntry);
-          }
-        }).catch(() => {});
-      }
     }
 
     // Live duration tracker
