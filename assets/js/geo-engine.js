@@ -9,7 +9,7 @@
   const SESSION_LOGGED_KEY = "cc_logged_session_id";
   
   // 100% Free Centralized Cloud DB Endpoint (Firebase Realtime REST DB)
-  const CLOUD_DB_URL = "https://cybercity2050-logs-default-rtdb.firebaseio.com/access_logs";
+  const CLOUD_DB_URL = "https://cybercity2050-logs-4cf99-default-rtdb.firebaseio.com/access_logs";
 
   // --- 1. HELPERS: LOCAL & CLOUD DB LOGGING ---
   function getLogs() {
