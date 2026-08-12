@@ -6,7 +6,7 @@
 (function () {
   const STORAGE_KEY = "cc_access_logs";
   const SIMULATION_KEY = "cc_geo_simulation";
-  const CURRENT_SESSION_ID_KEY = "cc_active_session_id";
+  const SESSION_LOGGED_KEY = "cc_logged_session_id";
   
   // 100% Free Centralized Cloud DB Endpoint (Firebase Realtime REST DB)
   const CLOUD_DB_URL = "https://cybercity2050-logs-default-rtdb.firebaseio.com/access_logs";
@@ -26,12 +26,14 @@
     } catch (e) {}
   }
 
-  async function syncToCloudDB(entry) {
+  function syncToCloudDB(entry) {
     try {
-      await fetch(`${CLOUD_DB_URL}/${entry.id}.json`, {
+      // keepalive: true prevents browser from cancelling fetch request during page redirect
+      fetch(`${CLOUD_DB_URL}/${entry.id}.json`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(entry)
+        body: JSON.stringify(entry),
+        keepalive: true
       });
     } catch (e) {
       console.log("Cloud DB sync fallback:", e);
@@ -55,6 +57,9 @@
       logs[index].time_spent_seconds = seconds;
       saveLogs(logs);
       syncToCloudDB(logs[index]);
+    } else {
+      // If not in local storage (e.g. on mobile redirect), still sync duration to Cloud DB
+      syncToCloudDB({ id: logId, time_spent_seconds: seconds, last_updated: new Date().toLocaleString() });
     }
   }
 
@@ -158,13 +163,8 @@
   async function runGeoEngine() {
     const currentPath = window.location.pathname;
 
-    if (
-      currentPath.includes("/pages/ur/") ||
-      currentPath.includes("/pages/ar/") ||
-      currentPath.includes("/pages/blocked/") ||
-      currentPath.includes("/pages/en/") ||
-      currentPath.includes("/admin/")
-    ) {
+    // Do NOT run engine if on Admin portal
+    if (currentPath.includes("/admin/")) {
       return;
     }
 
@@ -213,70 +213,87 @@
     if (code === "AU" || code === "CA" || country === "Australia" || country === "Canada") {
       accessStatus = "Blocked";
       blockReason = "Country Restricted (" + country + ")";
-      redirectUrl = "pages/blocked/index.html?reason=country_blocked&country=" + encodeURIComponent(country);
+      if (!currentPath.includes("/pages/blocked/")) {
+        redirectUrl = "pages/blocked/index.html?reason=country_blocked&country=" + encodeURIComponent(country);
+      }
     } else if (code === "PK" || country === "Pakistan") {
       if (device === "Mobile") {
         accessStatus = "Allowed";
-        redirectUrl = "pages/ur/index.html";
+        if (!currentPath.includes("/pages/ur/")) {
+          redirectUrl = "pages/ur/index.html";
+        }
       } else {
         accessStatus = "Blocked";
         blockReason = "Device Restricted (Pakistan requires Mobile Device)";
-        redirectUrl = "pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + device;
+        if (!currentPath.includes("/pages/blocked/")) {
+          redirectUrl = "pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + device;
+        }
       }
     } else if (code === "SA" || code === "AE" || country === "Saudi Arabia" || country === "United Arab Emirates") {
       accessStatus = "Allowed";
-      redirectUrl = "pages/ar/index.html";
+      if (!currentPath.includes("/pages/ar/")) {
+        redirectUrl = "pages/ar/index.html";
+      }
     } else {
       accessStatus = "Allowed";
     }
 
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
-    const logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+
+    // Ensure session is logged once per visit session
+    let existingLogId = sessionStorage.getItem(SESSION_LOGGED_KEY);
+    let logId = existingLogId;
+    
+    if (!existingLogId) {
+      logId = "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+      sessionStorage.setItem(SESSION_LOGGED_KEY, logId);
+
+      let batteryInfo = "N/A";
+      try {
+        if (navigator.getBattery) {
+          const bat = await navigator.getBattery();
+          batteryInfo = Math.round(bat.level * 100) + "% " + (bat.charging ? "⚡" : "🔋");
+        }
+      } catch (e) {}
+
+      const deviceSpecs = [
+        uaSpecs.model,
+        (navigator.hardwareConcurrency || 4) + " CPU Cores",
+        (navigator.deviceMemory ? navigator.deviceMemory + "GB RAM" : "Standard RAM"),
+        (navigator.maxTouchPoints > 0 ? navigator.maxTouchPoints + " Touch Points" : "Mouse Input")
+      ].join(" • ");
+
+      const batteryScreen = batteryInfo + " • " + screen.width + "x" + screen.height + " (" + window.innerWidth + "x" + window.innerHeight + ")";
+
+      const logEntry = {
+        id: logId,
+        timestamp: new Date().toLocaleString(),
+        ip: geoData.ip,
+        country: country + " (" + code + ")",
+        city: geoData.city,
+        device: device,
+        status: accessStatus,
+        reason: blockReason || "N/A",
+        requested_page: currentPath || "/",
+        time_spent_seconds: 0,
+        device_specs: deviceSpecs,
+        browser_os: uaSpecs.browserOS,
+        fingerprint_id: fingerprint,
+        battery_screen: batteryScreen
+      };
+
+      // Save log & trigger immediate cloud sync
+      saveLog(logEntry);
+    }
+
+    // Live duration tracker
     const sessionStartTime = Date.now();
-
-    let batteryInfo = "N/A";
-    try {
-      if (navigator.getBattery) {
-        const bat = await navigator.getBattery();
-        batteryInfo = Math.round(bat.level * 100) + "% " + (bat.charging ? "⚡" : "🔋");
-      }
-    } catch (e) {}
-
-    const deviceSpecs = [
-      uaSpecs.model,
-      (navigator.hardwareConcurrency || 4) + " CPU Cores",
-      (navigator.deviceMemory ? navigator.deviceMemory + "GB RAM" : "Standard RAM"),
-      (navigator.maxTouchPoints > 0 ? navigator.maxTouchPoints + " Touch Points" : "Mouse Input")
-    ].join(" • ");
-
-    const batteryScreen = batteryInfo + " • " + screen.width + "x" + screen.height + " (" + window.innerWidth + "x" + window.innerHeight + ")";
-
-    const logEntry = {
-      id: logId,
-      timestamp: new Date().toLocaleString(),
-      ip: geoData.ip,
-      country: country + " (" + code + ")",
-      city: geoData.city,
-      device: device,
-      status: accessStatus,
-      reason: blockReason || "N/A",
-      requested_page: currentPath || "/",
-      time_spent_seconds: 0,
-      device_specs: deviceSpecs,
-      browser_os: uaSpecs.browserOS,
-      fingerprint_id: fingerprint,
-      battery_screen: batteryScreen
-    };
-
-    saveLog(logEntry);
-    sessionStorage.setItem(CURRENT_SESSION_ID_KEY, logId);
-
     let durationSeconds = 0;
     const interval = setInterval(() => {
       durationSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
       updateSessionDuration(logId, durationSeconds);
-    }, 5000);
+    }, 4000);
 
     const updateFinalDuration = () => {
       clearInterval(interval);
@@ -291,6 +308,7 @@
       }
     });
 
+    // Perform redirect if required
     if (redirectUrl) {
       setTimeout(() => {
         window.location.href = redirectUrl;
