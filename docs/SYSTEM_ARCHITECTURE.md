@@ -10,33 +10,33 @@ CyberCity 2050 employs a **Hybrid Client-Edge Serverless Architecture**. It comb
 
 ```mermaid
 graph TD
-    User([Visitor Device / Browser]) -->|Loads Page| CDN[Static Asset Host / Localhost]
-    CDN --> Engine[assets/js/geo-engine.js]
+    User([Visitor Device / Browser]) -->|Loads Page| CDN[Vercel Edge / Localhost]
+    CDN --> Head[Pre-Render Head geo-engine.js]
     
     subgraph Client-Side Geo & Telemetry Engine
-        Engine --> IPCheck[Multi-Provider Geo Check<br/>ipwho.is / ipapi.co / ip-api.com]
-        Engine --> Specs[Hardware & Battery Profiler<br/>Cores, RAM, GPU, Screen, Fingerprint]
-        Engine --> RuleEngine{Compliance Rule Evaluator}
+        Head --> IPCheck[High-Speed Parallel Geo Check<br/>ipwho.is / geojs.io / api.country.is]
+        Head --> Specs[Hardware & Battery Profiler<br/>Cores, RAM, GPU, Screen, Fingerprint]
+        Head --> RuleEngine{Compliance Rule Evaluator}
     end
     
-    RuleEngine -->|AU / CA| BlockPage[pages/blocked/index.html]
+    RuleEngine -->|AU / CA| BlockPage[/pages/blocked/index.html]
     RuleEngine -->|PK + Desktop| BlockPage
-    RuleEngine -->|PK + Mobile| UrduPage[pages/ur/index.html]
-    RuleEngine -->|SA / AE| ArabPage[pages/ar/index.html]
-    RuleEngine -->|UK / Global| EngPage[index.html]
+    RuleEngine -->|PK + Mobile| UrduPage[/pages/ur/index.html]
+    RuleEngine -->|SA / AE| ArabPage[/pages/ar/index.html]
+    RuleEngine -->|UK / Global| EngPage[/index.html]
     
     subgraph Telemetry Persistence Pipeline
-        Engine -->|Keep-Alive POST / REST PUT| CloudDB[(Firebase RTDB)]
-        Engine -->|Backup Async POST| GAS[(Google Apps Script / Sheets)]
-        Engine -->|Local Cache| LocalStorage[(Browser LocalStorage)]
+        Head -->|Keep-Alive REST PUT| CloudDB[(Firebase RTDB)]
+        Head -->|Live Duration PATCH| CloudDB
+        Head -->|Local Session Cache| LocalStorage[(Browser LocalStorage)]
     end
     
     subgraph Administrator Telemetry Portal
         AdminUser([Admin Workstation]) -->|Localhost Only| AdminUI[admin/index.html]
-        AdminUI -->|SHA-256 Check| AuthPass{Authorized?}
-        AuthPass -->|Yes| Stream[SSE Real-time EventSource Stream]
+        AdminUI -->|SHA-256 Check| AuthPass{Role Check}
+        AuthPass -->|Master / Operator| Stream[SSE Real-time EventSource Stream]
         CloudDB -.->|Live Push Event| Stream
-        Stream --> AdminTable[Admin Telemetry Grid + KPIs]
+        Stream --> AdminTable[Admin Telemetry Grid + Live KPIs]
     end
 ```
 
@@ -46,11 +46,12 @@ graph TD
 
 | Layer | Technologies Used | Key Purpose |
 | :--- | :--- | :--- |
-| **Core Structure** | Semantic HTML5, SVG Symbol Sprites | Clean markup, high accessibility, zero layout shifts. |
-| **Styling & Theme** | Vanilla CSS3, CSS Custom Properties, Glassmorphism | Solarpunk dark/emerald palette, responsive grids. |
-| **Motion & Graphics** | HTML5 Canvas 2D, Intersection Observer, Dual Video Controller | Apple-style scroll canvas, seamless background video cross-fading. |
-| **Security & Routing** | Multi-Provider IP Geolocation APIs, Web Crypto API | Geo-fencing, client profiling, SHA-256 admin password verification. |
+| **Core Structure** | Semantic HTML5, SVG Symbol Sprites, Urdu RTL | Clean markup, high accessibility, zero layout shifts. |
+| **Styling & Theme** | Vanilla CSS3, CSS Custom Properties, Noto Sans Arabic | Solarpunk dark/emerald palette, responsive grids, native Urdu fonts. |
+| **Motion & Graphics** | HTML5 Canvas 2D, Dual Video Controller, Click Drag Physics | Seamless background video cross-fading, interactive horizontal table pan. |
+| **Security & Routing** | Multi-Provider IP Geolocation, Web Crypto API, Google Translate Guard | Geo-fencing, client profiling, SHA-256 admin password verification. |
 | **Persistence** | Firebase Realtime Database (REST API), Google Apps Script, LocalStorage | Zero-cost serverless logging with real-time SSE streaming. |
+| **Edge Hosting** | Vercel Edge Network, `vercel.json` Cache Headers | Zero-cache edge headers ensuring fresh mobile evaluations. |
 
 ---
 
@@ -59,11 +60,9 @@ graph TD
 1. **Localhost-Only Admin Enforcement:**
    * `admin/index.html` inspects `window.location.hostname`.
    * If the host is not `localhost`, `127.0.0.1`, or `::1`, the admin portal displays `#admin-public-blocked` overlay and disables all dashboard scripts.
-2. **SHA-256 Cryptographic Authentication:**
-   * Passwords and usernames are never stored or evaluated in plaintext.
-   * Input strings are hashed via `crypto.subtle.digest("SHA-256", ...)`.
+2. **SHA-256 Cryptographic Authentication & RBAC:**
+   * Passwords and usernames are evaluated securely via `crypto.subtle.digest("SHA-256", ...)`.
+   * Pinned Master Super Admin (`samiuthwal`) holds immutable owner rights; standard operators have restricted access.
 3. **Resilient Geolocation Fallback Hierarchy:**
-   * Primary: `https://ipwho.is/` (Supports VPNs, high rate limits, zero CORS restrictions).
-   * Secondary: `https://ipapi.co/json/`.
-   * Tertiary: `http://ip-api.com/json/`.
-   * Fast race timeout (1500ms) prevents page load blocking.
+   * Parallel resolution with `Promise.any`: `https://ipwho.is/`, `https://get.geojs.io/v1/ip/geo.json`, `https://api.country.is`.
+   * Immediate pre-render `<head>` execution handles `document.readyState` (interactive / complete).

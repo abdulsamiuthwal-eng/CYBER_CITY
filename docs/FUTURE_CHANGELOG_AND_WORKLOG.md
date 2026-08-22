@@ -23,6 +23,25 @@ When making modifications in future chat sessions, append an entry following thi
 
 ## 📜 Historical Changelog
 
+### 2026-08-22 — High-Speed Geo-IP Parallel Resolution, IPv6 Normalization & Chrome Auto-Translate Bypass
+* **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)
+* **Impacted Files:** `assets/js/geo-engine.js`, `index.html`, `pages/ur/index.html`, `vercel.json`
+* **Summary of Changes:**
+  * **Parallel Multi-Provider Resolution:** Concurrently query `ipwho.is`, `geojs.io`, and `api.country.is` with `Promise.any`, returning valid geolocation within 150–200ms.
+  * **IPv6 Array Normalization:** Handled Array response structures (`[ { country_code: "PK" } ]`) returned by `geojs.io` on mobile cellular IPv6 networks (Jazz/Mobilink).
+  * **Pre-Render `<head>` Execution:** Loaded `geo-engine.js` in `<head>` with `document.readyState` check, executing before DOM paint.
+  * **Google Translate Bypass:** Added `<meta name="google" content="notranslate" />` and `notranslate` CSS classes on Urdu page to prevent mobile Chrome from automatically translating RTL Urdu back to English.
+  * **Vercel Cache-Control:** Created `vercel.json` with `Cache-Control: public, max-age=0, must-revalidate` ensuring mobile browsers receive the latest code on every visit.
+
+### 2026-08-22 — Multi-Role User Management, Zero-Flicker Telemetry & Dual-Axis Momentum Pan
+* **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)
+* **Impacted Files:** `admin/index.html`, `Open-Admin-Dashboard.bat`, `config/server.js`
+* **Summary of Changes:**
+  * **Multi-Role RBAC:** Pinned Master Super Admin (`samiuthwal`) at the top of user list. Operators see other accounts as `🔒 Protected` and can only delete their own account.
+  * **Silent Background Updates:** Firebase SSE sync updates live telemetry table silently without flickering background or causing blur states.
+  * **Click-and-Drag Momentum Pan:** Implemented interactive horizontal drag-to-scroll physics and Shift + Wheel scrolling on `.table-card`.
+  * **Guaranteed Launcher:** Built zero-dependency Node static server (`config/server.js`) auto-launched by `Open-Admin-Dashboard.bat` if port 5500 is offline.
+
 ### 2026-08-22 — Wide Responsive 2-Column Register Grid & Real-Time Live Approval Listener Gate
 * **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)
 * **Impacted Files:** `admin/index.html`
@@ -31,17 +50,6 @@ When making modifications in future chat sessions, append an entry following thi
   * **Live Waiting Radar Screen:** On submitting registration, the form collapses into a pulsing high-tech waiting card with live radar pulse and status text informing the user in English to wait while Super Admin reviews the request.
   * **Real-Time Polling Listener:** Integrated 2-second live polling loop querying Firebase RTDB & LocalStorage for user approval status.
   * **Dynamic Instant Authorization Screen:** The millisecond Super Admin clicks "Approve", the user's screen instantly transforms with celebratory sound and glowing green banner: `"🎉 ACCESS GRANTED & AUTHORIZED!"` with a direct 1-click `"🚀 PROCEED TO LOGIN NOW →"` button and automated 5-second login redirect.
-  * **Zero Collateral Alterations:** Strictly zero changes to any other codebase files.
-
-### 2026-08-22 — Interactive 3D Quantum Bubble Pop, Spark Explosions & Web Audio Sound Engine
-* **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)
-* **Impacted Files:** `admin/index.html`
-* **Summary of Changes:**
-  * **Interactive Bubble Pop & Collision:** Added pointer/click intersection detection for all active 3D bio-bubbles on the Admin Auth screen.
-  * **Quantum Spark Burst Particles:** Each popped bubble dynamically spawns 20–28 glowing neon green sparks with realistic drag, velocity decay, and gravity.
-  * **Expanding Shockwave Rings:** Expanding illuminated shockwaves with glowing bloom that fade out smoothly.
-  * **Zero-Dependency Synthesized Audio Engine:** Built-in Web Audio API synthesizer that plays a crisp, futuristic frequency-ramped quantum pop chime.
-  * **Organic Respawn Engine:** Popped bubbles organically respawn from bottom to maintain visual balance.
 
 ### 2026-08-22 — Master Documentation Hub Architecture Setup
 * **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)

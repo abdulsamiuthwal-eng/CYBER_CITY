@@ -21,16 +21,22 @@ All comprehensive architecture diagrams, file breakdowns, security matrices, adm
 ## ⚡ Quick Start & Admin Portal
 
 * **Website Entry Point:** Open [`index.html`](./index.html) in your browser or local server (`Live Server` at `http://localhost:5500`).
-* **Admin Launcher:** Double-click [`Open-Admin-Dashboard.bat`](./Open-Admin-Dashboard.bat) to open the Admin Telemetry Portal.
+* **Admin Launcher:** Double-click [`Open-Admin-Dashboard.bat`](./Open-Admin-Dashboard.bat) to automatically start the background server and launch the Admin Telemetry Portal.
 * **Admin Login Credentials:**
-  * **Username:** `samiuthwal`
-  * **Password:** `admin5911`
+  * **Master Username:** `samiuthwal`
+  * **Master Password:** `admin5911`
   *(Note: Admin portal access is strictly restricted to `localhost` environments for security).*
 
 ---
 
-## 🛡️ Geo-Routing Summary
+## 🛡️ Geo-Routing Summary (PDF Tasks 1 & 2)
 * **Australia & Canada:** Access Blocked $\rightarrow$ [`pages/blocked/index.html`](./pages/blocked/index.html).
 * **Pakistan:** Mobile Only Allowed (Urdu RTL) $\rightarrow$ [`pages/ur/index.html`](./pages/ur/index.html); Desktop Blocked.
 * **Saudi Arabia & UAE:** Allowed (Arabic RTL) $\rightarrow$ [`pages/ar/index.html`](./pages/ar/index.html).
 * **UK & International:** Allowed (English) $\rightarrow$ [`index.html`](./index.html).
+
+---
+
+## 🚀 Live Production Deployment
+* **Live Website URL:** [https://cyber-city-silk.vercel.app](https://cyber-city-silk.vercel.app)
+* **Live Database:** Firebase Realtime Database
