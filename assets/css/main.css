@@ -281,7 +281,7 @@ html, body {
 .stat-card:hover { background: var(--bg-card-hover); border-color: var(--glass-border-hover); transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 .stat-card:hover::before { opacity: 1; }
 .stat-icon { font-size: 1.8rem; margin-bottom: 12px; display: block; }
-.stat-value { font-family: var(--font-heading); font-size: 1.85rem; font-weight: 800; color: var(--green-primary); line-height: 1; margin-bottom: 6px; letter-spacing: 1px; }
+.stat-value { font-family: var(--font-heading); font-size: clamp(1.35rem, 2.2vw, 1.85rem); font-weight: 800; color: var(--green-primary); line-height: 1.1; margin-bottom: 6px; letter-spacing: 0.5px; white-space: nowrap; }
 .stat-label { font-size: 0.68rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
 .stat-sub { font-size: 0.68rem; color: var(--green-primary); font-weight: 500; opacity: 0.8; }
 

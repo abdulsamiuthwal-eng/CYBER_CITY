@@ -128,6 +128,17 @@ When making modifications in future chat sessions, append an entry following thi
   * **Zero Core Modifications:** No geo-engine or security logic was touched.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — Telemetry Population Counter Digit & Layout Polish
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `index.html`, `pages/ur/index.html`, `pages/ar/index.html`, `pages/en/index.html`, `assets/css/main.css`
+* **Summary of Changes:**
+  * **Counter Adjusted to 840,000:** Updated population target from 8,400,000 to 840,000 across all portals to prevent card overflow on compact viewports.
+  * **Responsive Typography:** Updated `.stat-value` to use `clamp(1.35rem, 2.2vw, 1.85rem)` with `white-space: nowrap;` for clean fitting inside glassmorphic telemetry cards.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
 
 
