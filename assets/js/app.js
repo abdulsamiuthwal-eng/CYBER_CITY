@@ -3,11 +3,17 @@
    ========================================= */
 
 // --- LOADER ---
+function dismissLoader() {
+  const loader = document.getElementById("loader");
+  if (loader && !loader.classList.contains("hide")) {
+    loader.classList.add("hide");
+  }
+}
 window.addEventListener("load", () => {
-  setTimeout(() => {
-    const loader = document.getElementById("loader");
-    if (loader) loader.classList.add("hide");
-  }, 2400);
+  setTimeout(dismissLoader, 600);
+});
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(dismissLoader, 1200);
 });
 
 // --- NAVBAR HIDE AFTER HERO SECTION ---
@@ -31,9 +37,30 @@ window.addEventListener("scroll", () => {
 // --- HAMBURGER MENU ---
 const hamburger = document.getElementById("hamburger");
 const navLinks = document.getElementById("nav-links");
-hamburger && hamburger.addEventListener("click", () => {
-  navLinks && navLinks.classList.toggle("open");
-});
+
+if (hamburger && navLinks) {
+  hamburger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    hamburger.classList.toggle("active");
+    navLinks.classList.toggle("open");
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!navLinks.contains(e.target) && !hamburger.contains(e.target) && navLinks.classList.contains("open")) {
+      navLinks.classList.remove("open");
+      hamburger.classList.remove("active");
+    }
+  });
+
+  // Close menu when a navigation link is clicked
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      hamburger.classList.remove("active");
+    });
+  });
+}
 
 // --- REVEAL ON SCROLL ---
 const revealEls = document.querySelectorAll(".reveal");

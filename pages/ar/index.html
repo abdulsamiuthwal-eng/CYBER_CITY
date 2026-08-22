@@ -5,11 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>سايبر سيتي 2050 — مدينة المستقبل</title>
   <meta name="description" content="سايبر سيتي 2050: مدينة ذكية متكاملة تعمل بالذكاء الاصطناعي والطاقة النظيفة لبناء غد أفضل." />
-  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css?v=2050.6" />
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: right; }
+    body {
+      font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: right;
+      direction: rtl;
+    }
     .hero-buttons { justify-content: flex-start; }
     .footer-links { direction: ltr; }
+
+    /* Year digits strictly LTR */
+    .hero-year {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block !important;
+    }
+
+    /* Mobile Responsive Overrides */
+    @media (max-width: 900px) {
+      #navbar {
+        height: 68px !important;
+        padding: 0 4% !important;
+      }
+      #navbar .nav-btn {
+        display: none !important;
+      }
+      .nav-links {
+        display: none !important;
+      }
+      .nav-links.open {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 68px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        padding: 24px 8% 40px !important;
+        gap: 16px !important;
+        z-index: 999999 !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+        border-top: 1.5px solid rgba(22, 163, 74, 0.2) !important;
+        overflow-y: auto !important;
+        text-align: right !important;
+      }
+      .nav-links.open a {
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: #041404 !important;
+        padding: 12px 0 !important;
+        border-bottom: 1px solid rgba(22, 163, 74, 0.1) !important;
+        display: block !important;
+        width: 100% !important;
+      }
+      .nav-links.open .mobile-cta-wrap {
+        display: block !important;
+        margin-top: 10px !important;
+      }
+      .nav-links.open .mobile-cta-btn {
+        display: block !important;
+        padding: 14px 24px !important;
+        background: #16a34a !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        font-weight: 800 !important;
+        box-shadow: 0 4px 16px rgba(22, 163, 74, 0.25) !important;
+      }
+      .hamburger {
+        display: flex !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-logo-text { font-size: 0.85rem !important; }
+      .nav-logo-sub { font-size: 0.52rem !important; letter-spacing: 0 !important; }
+      .nav-logo-icon { width: 34px !important; height: 34px !important; }
+    }
   </style>
 </head>
 <body>
@@ -151,7 +230,8 @@
 
 <!-- ===== LOADER ===== -->
 <div id="loader">
-  <div class="loader-logo">CYBERCITY 2050 (العربية)</div>
+  <div class="loader-logo" style="font-family:'Noto Sans Arabic',sans-serif;font-size:2.1rem;letter-spacing:0;font-weight:800;color:#16a34a;">سايبر سيتي ٢٠٥٠</div>
+  <div style="font-size:0.95rem;color:#14532d;font-weight:700;margin-top:-22px;margin-bottom:24px;font-family:'Noto Sans Arabic',sans-serif;">جاري تحميل أنظمة المدينة...</div>
   <div class="loader-bar"><div class="loader-bar-fill"></div></div>
 </div>
 
@@ -174,9 +254,10 @@
     <li><a href="#systems">أنظمة المدينة</a></li>
     <li><a href="#showcase">خدمات الذكاء الاصطناعي</a></li>
     <li><a href="#news">الأخبار</a></li>
+    <li class="mobile-cta-wrap" style="display:none;"><a href="../join-future.html" class="mobile-cta-btn">انضم إلى المستقبل &rarr;</a></li>
   </ul>
 
-  <div style="display:flex;align-items:center;gap:14px;">
+  <div style="display:flex;align-items:center;gap:12px;">
     <a href="../join-future.html" class="nav-btn" style="text-decoration:none;">انضم إلى المستقبل</a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -200,7 +281,7 @@
     </div>
 
     <h1 class="hero-title">سايبر<span>سيتي</span></h1>
-    <div class="hero-year">2 0 5 0</div>
+    <div class="hero-year" dir="ltr" style="direction: ltr; display: inline-block; unicode-bidi: isolate;">2 0 5 0</div>
 
     <p class="hero-desc">
       عِش تجربة المستقبل. مدينة ذكية متكاملة تعمل بالذكاء الاصطناعي والطاقة النظيفة لبناء غد أفضل — حيث تلتقي التكنولوجيا بالاستدامة.

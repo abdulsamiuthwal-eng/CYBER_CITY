@@ -70,3 +70,15 @@ When making modifications in future chat sessions, append an entry following thi
   * **Console Debug Telemetry:** Added `[GeoEngine]` prefixed `console.log` statements reporting detected device type and country code for live production diagnosis via browser DevTools (F12 → Console).
   * **GEO_SECURITY_AND_ROUTING.md Updated:** Documentation updated to reflect all 4 new reliability mechanisms.
 * **Verification / Testing:** Deployed to Vercel production (`https://cyber-city-silk.vercel.app`). PC/Laptop access from Pakistan now reliably redirects to Block screen. Mobile access continues to redirect to Urdu RTL version.
+
+---
+
+### 2026-08-22 — Urdu Mobile View Polish, RTL Digits Normalization & Hamburger Menu Fix
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`, `assets/js/app.js`, `pages/ur/index.html`, `pages/ar/index.html`, `index.html`
+* **Summary of Changes:**
+  * **Navbar Collision Fix:** Hid `.nav-btn` on mobile screens (`@media (max-width: 900px)`) to eliminate overlap with `.nav-logo` on compact screens; embedded `.mobile-cta-btn` cleanly inside the mobile drawer menu.
+  * **Mask-Image Clipping Fix on Hamburger Drawer:** Removed `-webkit-mask-image` on `#navbar` that was clipping child elements below 72px; styled `.nav-links.open` with a full-height glassmorphic drawer, high z-index (999999), and smooth fade-in animation.
+  * **Enhanced Hamburger Toggle Logic:** Updated `assets/js/app.js` with smooth `.active` animation (3 bars to X), auto-close on link click, and auto-close when tapping outside the drawer.
+  * **RTL Reversed Year Fix:** Applied `direction: ltr !important; unicode-bidi: isolate !important;` to `.hero-year` ensuring the year displays as `2 0 5 0` instead of reversed `0 5 0 2`.
+* **Verification / Testing:** Validated on mobile viewports and desktop across English, Arabic, and Urdu portals. No background engine or telemetry functionality was touched.
