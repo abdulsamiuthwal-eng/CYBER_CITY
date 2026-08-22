@@ -191,12 +191,14 @@
     const fetchFromGeojs = async () => {
       const r = await fetch("https://get.geojs.io/v1/ip/geo.json", { cache: "no-store" });
       if (!r.ok) throw new Error("HTTP " + r.status);
-      const d = await r.json();
-      if (d && d.country_code) {
+      const raw = await r.json();
+      const d = Array.isArray(raw) ? raw[0] : raw;
+      if (d && (d.country_code || d.country)) {
+        const cCode = (d.country_code || d.country || "").toUpperCase();
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country || (d.country_code === "PK" ? "Pakistan" : d.country_code),
-          country_code: d.country_code.toUpperCase(),
+          country_name: d.country || (cCode === "PK" ? "Pakistan" : cCode),
+          country_code: cCode,
           city: d.city || "Unknown"
         };
       }
