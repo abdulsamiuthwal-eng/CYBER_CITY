@@ -167,72 +167,99 @@
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    // ⚡ ROBUST MULTI-PROVIDER REAL IP GEOLOCATION (No 403 blocks on VPNs)
+    // ⚡ PROFESSIONAL MULTI-PROVIDER GEO-IP ENGINE — Sequential + Verified field names
     let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
 
-    const fetchGeoFromProviders = async () => {
-      // Provider 1: ipwho.is (Works 100% on VPNs, no 403 rate-limits)
-      try {
-        const res = await fetch("https://ipwho.is/");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.success && data.country_code) {
-            return {
-              ip: data.ip || "Unknown",
-              country_name: data.country || "Unknown",
-              country_code: data.country_code || "XX",
-              city: data.city || "Unknown"
-            };
-          }
-        }
-      } catch (e) {}
+    // Always clear stale session cache on fresh page load — prevents "XX" stuck-state bug
+    try { sessionStorage.removeItem("cc_session_geo_data"); } catch (e) {}
 
-      // Provider 2: ipapi.co fallback
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.country_code) {
-            return {
-              ip: data.ip || "Unknown",
-              country_name: data.country_name || "Unknown",
-              country_code: data.country_code || "XX",
-              city: data.city || "Unknown"
-            };
-          }
-        }
-      } catch (e) {}
+    // Each provider individually with VERIFIED correct field mapping
+    const fetchFromIpwhoIs = async () => {
+      const r = await fetch("https://ipwho.is/", { cache: "no-store" });
+      const d = await r.json();
+      // ipwho.is: { success, ip, country_code:"PK", country:"Pakistan", city:"Lahore" }
+      if (d && d.success === true && d.country_code && d.country_code !== "") {
+        return {
+          ip: d.ip || "Unknown",
+          country_name: d.country || "Unknown",
+          country_code: d.country_code.toUpperCase(),
+          city: d.city || "Unknown"
+        };
+      }
+      throw new Error("ipwho.is failed");
+    };
 
-      // Provider 3: ip-api.com fallback
-      try {
-        const res = await fetch("http://ip-api.com/json/");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.countryCode) {
-            return {
-              ip: data.query || "Unknown",
-              country_name: data.country || "Unknown",
-              country_code: data.countryCode || "XX",
-              city: data.city || "Unknown"
-            };
-          }
-        }
-      } catch (e) {}
+    const fetchFromGeojs = async () => {
+      const r = await fetch("https://get.geojs.io/v1/ip/geo.json", { cache: "no-store" });
+      const d = await r.json();
+      // geojs.io: { ip, country_code:"PK", country:"Pakistan", city:"Lahore" }
+      if (d && d.country_code && d.country_code !== "") {
+        return {
+          ip: d.ip || "Unknown",
+          country_name: d.country || "Unknown",
+          country_code: d.country_code.toUpperCase(),
+          city: d.city || "Unknown"
+        };
+      }
+      throw new Error("geojs.io failed");
+    };
 
-      return null;
+    const fetchFromIpapi = async () => {
+      const r = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+      const d = await r.json();
+      // ipapi.co: { ip, country_code:"PK", country_name:"Pakistan", city:"Lahore" }
+      if (d && d.country_code && !d.error) {
+        return {
+          ip: d.ip || "Unknown",
+          country_name: d.country_name || "Unknown",
+          country_code: d.country_code.toUpperCase(),
+          city: d.city || "Unknown"
+        };
+      }
+      throw new Error("ipapi.co failed");
+    };
+
+    const fetchFromFreeipapi = async () => {
+      const r = await fetch("https://freeipapi.com/api/json", { cache: "no-store" });
+      const d = await r.json();
+      // freeipapi.com: { ipAddress, countryCode:"PK", countryName:"Pakistan", cityName:"Lahore" }
+      if (d && d.countryCode && d.countryCode !== "") {
+        return {
+          ip: d.ipAddress || "Unknown",
+          country_name: d.countryName || "Unknown",
+          country_code: d.countryCode.toUpperCase(),
+          city: d.cityName || "Unknown"
+        };
+      }
+      throw new Error("freeipapi.com failed");
+    };
+
+    // Run all 4 providers in parallel — first valid result wins
+    const fetchGeoFromProviders = () => {
+      return Promise.any([
+        fetchFromIpwhoIs(),
+        fetchFromGeojs(),
+        fetchFromIpapi(),
+        fetchFromFreeipapi()
+      ]);
     };
 
     try {
+      // 5 second timeout — enough for even the slowest mobile 4G/LTE network
       const geoResult = await Promise.race([
         fetchGeoFromProviders(),
-        new Promise(resolve => setTimeout(() => resolve(null), 1500))
+        new Promise(resolve => setTimeout(() => resolve(null), 5000))
       ]);
 
-      if (geoResult) {
+      if (geoResult && geoResult.country_code !== "XX") {
         geoData = geoResult;
+        // Cache for this page session only (not cross-page, to prevent stale routing)
+        try {
+          sessionStorage.setItem("cc_session_geo_data", JSON.stringify(geoResult));
+        } catch (e) {}
       }
     } catch (err) {
-      console.log("Geo API error:", err);
+      console.warn("[GeoEngine] All providers failed:", err);
     }
 
     const code = (geoData.country_code || "").toUpperCase();
