@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>حجز جولة افتراضية — سايبر سيتي 2050</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css?v=2050.6" />
+  <style>
+    body { font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: right; direction: rtl; }
+    .subpage-hero {
+      padding: 140px 6% 50px;
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.06) 0%, var(--bg-primary, #f4f7f4) 100%);
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: 'Noto Sans Arabic', var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: #041404;
+      margin: 14px 0;
+    }
+    .tour-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 4%;
+    }
+    .tour-card {
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s ease;
+    }
+    .tour-card:hover {
+      transform: translateY(-6px);
+    }
+    .tour-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .tour-card-body {
+      padding: 20px;
+    }
+    .booking-box {
+      max-width: 750px;
+      margin: 40px auto 80px;
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+    }
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Noto Sans Arabic', sans-serif;
+      background: #f9fafb;
+      margin-top: 6px;
+      margin-bottom: 18px;
+    }
+    .form-control:focus {
+      border-color: #16a34a;
+      background: #fff;
+    }
+    @media (max-width: 900px) {
+      .subpage-hero { padding: 90px 5% 40px; }
+      .booking-box { padding: 24px 16px; margin: 20px auto 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo" style="font-family:'Noto Sans Arabic',sans-serif;font-size:2rem;letter-spacing:0;font-weight:800;color:#16a34a;">سايبر سيتي ٢٠٥٠</div>
+  <div style="font-size:0.92rem;color:#14532d;font-weight:700;margin-top:-22px;margin-bottom:24px;font-family:'Noto Sans Arabic',sans-serif;">جاري تحميل الجولة الافتراضية...</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" style="background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(22,163,74,0.2);">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">الاستكشاف الافتراضي</span>
+    </div>
+  </a>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <a href="join-future.html" class="nav-btn" style="text-decoration:none;">طلب الجنسية</a>
+    <a href="index.html" class="btn-primary" style="text-decoration:none;">&rarr; الرئيسية</a>
+  </div>
+</nav>
+
+<section class="subpage-hero">
+  <span class="section-tag">جولة تفاعلية ثلاثية الأبعاد</span>
+  <h1>عِش تجربة سايبر سيتي الافتراضية</h1>
+  <p style="max-width: 600px; margin: 0 auto; color: #374151;">
+    استكشف أحدث مدينة ذكية، والمسارات الجوية، وشبكات الطاقة الشمسية عبر جولة افتراضية غامرة.
+  </p>
+</section>
+
+<div class="tour-grid">
+  <div class="tour-card">
+    <img src="../../assets/images/smart-transport.png" alt="Smart Monorail" />
+    <div class="tour-card-body">
+      <h3 style="font-family:'Noto Sans Arabic',var(--font-heading); color:#041404; font-size:1.15rem; margin-bottom:8px;">مركز ترانزيت المونوريل</h3>
+      <p style="color:#4b5563; font-size:0.88rem; line-height:1.6;">استكشاف مسارات التنقل السريع الخالية من الانبعاثات الكربونية.</p>
+    </div>
+  </div>
+
+  <div class="tour-card">
+    <img src="../../assets/images/aerial-view.png" alt="Vertical Forests" />
+    <div class="tour-card-body">
+      <h3 style="font-family:'Noto Sans Arabic',var(--font-heading); color:#041404; font-size:1.15rem; margin-bottom:8px;">الغابات والأبراج الحضرية</h3>
+      <p style="color:#4b5563; font-size:0.88rem; line-height:1.6;">معاينة المجمعات السكنية المتكيفة مناخياً والقباب البيئية.</p>
+    </div>
+  </div>
+
+  <div class="tour-card">
+    <img src="../../assets/images/energy-grid.png" alt="Clean Energy Array" />
+    <div class="tour-card-body">
+      <h3 style="font-family:'Noto Sans Arabic',var(--font-heading); color:#041404; font-size:1.15rem; margin-bottom:8px;">حقول الطاقة الكمومية</h3>
+      <p style="color:#4b5563; font-size:0.88rem; line-height:1.6;">زيارة محطات التخزين المستدامة وشبكات الطاقة النظيفة بنسبة 94٪.</p>
+    </div>
+  </div>
+</div>
+
+<div class="booking-box">
+  <h2 style="font-family:'Noto Sans Arabic',var(--font-heading); color:#041404; margin-bottom:8px; text-align:center;">احجز موعد الجولة الموجهة</h2>
+  <p style="text-align:center; color:#4b5563; margin-bottom:28px;">احجز موعدك لتجربة الواقع الافتراضي برفقة مرشد الذكاء الاصطناعي:</p>
+
+  <form id="tour-form" onsubmit="event.preventDefault(); document.getElementById('tour-success').style.display='block'; document.getElementById('tour-form-fields').style.display='none';">
+    <div id="tour-form-fields">
+      <label style="font-weight:700; color:#041404;">الاسم الكامل:</label>
+      <input type="text" class="form-control" required placeholder="مثال: أحمد محمد" />
+
+      <label style="font-weight:700; color:#041404;">البريد الإلكتروني:</label>
+      <input type="email" class="form-control" required placeholder="ahmed@example.com" />
+
+      <label style="font-weight:700; color:#041404;">تاريخ الجولة المفضل:</label>
+      <input type="date" class="form-control" required />
+
+      <button type="submit" class="btn-primary" style="width:100%; border:none; padding:16px; font-size:1rem; cursor:pointer; font-weight:800; font-family:'Noto Sans Arabic',sans-serif;">تأكيد موعد الجولة &rarr;</button>
+    </div>
+
+    <div id="tour-success" style="display:none; text-align:center; padding:24px; background:#f0fdf4; border:1.5px solid #22c55e; border-radius:12px;">
+      <h3 style="color:#166534; margin-bottom:8px;">🎉 تم حجز جولتك الافتراضية بنجاح!</h3>
+      <p style="color:#15803d; font-size:0.95rem;">لقد أرسلنا رابط الجولة وتفاصيل الدخول إلى بريدك الإلكتروني.</p>
+    </div>
+  </form>
+</div>
+
+<footer style="padding:40px 6%;background:#fff;border-top:1px solid rgba(22,163,74,0.15);text-align:center;">
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 هيئة سايبر سيتي الحضرية. جميع الحقوق محفوظة.</div>
+</footer>
+
+<script src="../../assets/js/app.js"></script>
+</body>
+</html>

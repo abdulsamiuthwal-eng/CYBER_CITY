@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>مستقبل میں شامل ہوں — سائبر سٹی 2050 شہریت</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css?v=2050.6" />
+  <style>
+    body { font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: right; direction: rtl; }
+    .subpage-hero {
+      padding: 140px 6% 50px;
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.06) 0%, var(--bg-primary, #f4f7f4) 100%);
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: 'Noto Sans Arabic', var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: #041404;
+      margin: 14px 0;
+    }
+    .form-container {
+      max-width: 800px;
+      margin: 30px auto 80px;
+      background: #fff;
+      border: 1.5px solid rgba(22, 163, 74, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      color: #041404;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Noto Sans Arabic', sans-serif;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      background: #f9fafb;
+    }
+    .form-control:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+      background: #fff;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-container { padding: 24px 16px; margin: 20px auto 60px; }
+      .subpage-hero { padding: 90px 5% 40px; }
+    }
+  </style>
+</head>
+<body class="notranslate">
+
+<div id="loader">
+  <div class="loader-logo" style="font-family:'Noto Sans Arabic',sans-serif;font-size:2rem;letter-spacing:0;font-weight:800;color:#16a34a;">سائبر سٹی ۲۰۵۰</div>
+  <div style="font-size:0.92rem;color:#14532d;font-weight:700;margin-top:-22px;margin-bottom:24px;font-family:'Noto Sans Arabic',sans-serif;">شہریت کا پورٹل لوڈ ہو رہا ہے...</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<nav id="navbar" style="background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(22,163,74,0.2);">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div>
+      <div class="nav-logo-text">CYBERCITY</div>
+      <span class="nav-logo-sub">شہریت کا شعبہ</span>
+    </div>
+  </a>
+  <a href="index.html" class="btn-primary">&rarr; ہوم پیج پر واپس جائیں</a>
+</nav>
+
+<section class="subpage-hero">
+  <span class="section-tag">2050 شہریت کا پورٹل</span>
+  <h1>سائبر سٹی کی شہریت کے لیے درخواست دیں</h1>
+  <p style="max-width: 650px; margin: 0 auto; color: #374151;">
+    دنیا کے جدید ترین سمارٹ شہر میں رہنے، کام کرنے اور پائیدار مستقبل کا حصہ بننے کے لیے فارم پر کریں۔
+  </p>
+</section>
+
+<div class="form-container">
+  <form id="citizen-form" onsubmit="event.preventDefault(); document.getElementById('citizen-success').style.display='block'; document.getElementById('citizen-fields').style.display='none';">
+    <div id="citizen-fields">
+      <div class="form-row">
+        <div class="form-group">
+          <label>پہلا نام</label>
+          <input type="text" class="form-control" required placeholder="مثال: علی" />
+        </div>
+        <div class="form-group">
+          <label>آخری نام</label>
+          <input type="text" class="form-control" required placeholder="مثال: خان" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ای میل ایڈریس</label>
+          <input type="email" class="form-control" required placeholder="ali.khan@example.com" />
+        </div>
+        <div class="form-group">
+          <label>موجودہ ملک</label>
+          <input type="text" class="form-control" required value="پاکستان" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>پیشہ ورانہ شعبہ</label>
+        <select class="form-control" style="font-family:'Noto Sans Arabic',sans-serif;">
+          <option>AI اور روبوٹکس انجینئرنگ</option>
+          <option>پائیدار اور قابل تجدید توانائی</option>
+          <option>سمارٹ ہیلتھ کیئر و بائیوٹیکنالوجی</option>
+          <option>ایکو آرکیٹیکچر و شہری منصوبہ بندی</option>
+          <option>کوانٹم نیٹ ورک اور سائبر سیکیورٹی</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>سائبر سٹی میں رہائش کا مقصد</label>
+        <textarea class="form-control" rows="4" placeholder="مختصراً بیان کریں کہ آپ سائبر سٹی 2050 کی ترقی میں کیسے حصہ ڈالیں گے..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%; border:none; padding:16px; font-size:1.05rem; cursor:pointer; font-weight:800; font-family:'Noto Sans Arabic',sans-serif;">شہریت کی درخواست جمع کروائیں &rarr;</button>
+    </div>
+
+    <div id="citizen-success" style="display:none; text-align:center; padding:32px 20px; background:#f0fdf4; border:1.5px solid #22c55e; border-radius:12px;">
+      <h3 style="color:#166534; font-size:1.3rem; margin-bottom:10px;">🎉 آپ کی درخواست کامیابی سے موصول ہو گئی ہے!</h3>
+      <p style="color:#15803d; line-height:1.7;">ہماری میونسپل AI کونسل آپ کی درخواست کا جائزہ لے کر 48 گھنٹوں میں ای میل کے ذریعے رابطہ کرے گی۔</p>
+    </div>
+  </form>
+</div>
+
+<footer style="padding:40px 6%;background:#fff;border-top:1px solid rgba(22,163,74,0.15);text-align:center;">
+  <div class="footer-logo">CYBER<span>CITY</span> 2050</div>
+  <div class="footer-copy">&copy; 2050 سائبر سٹی میونسپل اتھارٹی — تمام حقوق محفوظ ہیں۔</div>
+</footer>
+
+<script src="../../assets/js/app.js"></script>
+</body>
+</html>

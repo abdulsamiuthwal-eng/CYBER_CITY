@@ -82,3 +82,16 @@ When making modifications in future chat sessions, append an entry following thi
   * **Enhanced Hamburger Toggle Logic:** Updated `assets/js/app.js` with smooth `.active` animation (3 bars to X), auto-close on link click, and auto-close when tapping outside the drawer.
   * **RTL Reversed Year Fix:** Applied `direction: ltr !important; unicode-bidi: isolate !important;` to `.hero-year` ensuring the year displays as `2 0 5 0` instead of reversed `0 5 0 2`.
 * **Verification / Testing:** Validated on mobile viewports and desktop across English, Arabic, and Urdu portals. No background engine or telemetry functionality was touched.
+
+---
+
+### 2026-08-22 — Complete A-to-Z Localized Subpages & CTA Alignment for Urdu & Arabic Portals
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `pages/ur/*`, `pages/ar/*`, `pages/ur/index.html`, `pages/ar/index.html`
+* **Summary of Changes:**
+  * **Complete Urdu Subpages Suite (`pages/ur/`):** Created 100% native Urdu RTL subpages for all 6 infrastructure systems (`system-transport.html`, `system-security.html`, `system-energy.html`, `system-environment.html`, `system-buildings.html`, `system-network.html`), plus `ai-core.html`, `virtual-tour.html`, `join-future.html`, and all 3 news articles (`news-drone-corridor.html`, `news-solar-array.html`, `news-zero-crime.html`).
+  * **Complete Arabic Subpages Suite (`pages/ar/`):** Created 100% native Arabic RTL subpages for all 6 infrastructure systems, plus `ai-core.html`, `virtual-tour.html`, `join-future.html`, and 3 news articles.
+  * **Seamless Portal Linking:** Updated all cards, showcase links, news links, and CTA buttons on `pages/ur/index.html` and `pages/ar/index.html` to point to localized subpages within their respective directories.
+  * **Strict Functionality Preservation:** Kept all telemetry, Firebase tracking, video playback, and geo-engine logic strictly intact without any modifications.
+* **Verification / Testing:** Tested internal link hierarchy, RTL layout formatting, form submissions, and interactive slider simulations. Deployed to Vercel production.
+
