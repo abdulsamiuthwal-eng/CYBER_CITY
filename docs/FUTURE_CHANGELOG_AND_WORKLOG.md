@@ -106,4 +106,16 @@ When making modifications in future chat sessions, append an entry following thi
   * **Zero Core Engine Modifications:** All geo-engine routing policies, Pakistan mobile allowances/desktop restrictions, and telemetry tracking remain 100% untouched.
 * **Verification / Testing:** Tested on root index, Urdu portal, and Arabic portal. Deployed to Vercel production.
 
+---
+
+### 2026-08-22 — Removal of Reel Section Across All Language Portals
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `index.html`, `pages/ur/index.html`, `pages/ar/index.html`, `pages/en/index.html`
+* **Summary of Changes:**
+  * **Reel Section Removed:** Cleanly removed `#city-video-section` from English, Urdu, Arabic, and `pages/en` templates.
+  * **Navbar Streamlined:** Removed the "Reel / ریئل / العرض" anchor links from top navigation bars across all portals.
+  * **Preserved Features:** Maintained the full "Watch Trailer" popup modal functionality triggered from the Hero Section button.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
