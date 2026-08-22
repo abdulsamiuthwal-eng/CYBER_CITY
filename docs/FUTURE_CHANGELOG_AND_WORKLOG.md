@@ -198,6 +198,18 @@ When making modifications in future chat sessions, append an entry following thi
   * **Visual Polish:** Enhanced `.stat-icon` badges with frosted glass background, emerald border glow, and smooth micro-hover elevation.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — Bidirectional Scroll Fade-In & Fade-Out Motion System
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/js/app.js`, `assets/css/main.css`
+* **Summary of Changes:**
+  * **Two-Way Scroll Reveal:** Configured `IntersectionObserver` in `assets/js/app.js` to dynamically add `.revealed` on scroll down (fade in + upward translate) and remove `.revealed` on scroll up (fade out + downward dissolve).
+  * **Dynamic Counter Re-triggers:** Telemetry counter numbers recalculate and animate whenever re-entering viewport on scroll.
+  * **Cinematic Easing:** Applied `cubic-bezier(0.16, 1, 0.3, 1)` easing curve for 60fps hardware-accelerated transitions across English, Urdu, and Arabic portals.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
 
 

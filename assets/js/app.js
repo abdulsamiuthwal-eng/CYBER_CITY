@@ -62,19 +62,21 @@ if (hamburger && navLinks) {
   });
 }
 
-// --- REVEAL ON SCROLL ---
+// --- BIDIRECTIONAL REVEAL ON SCROLL (FADE IN ON SCROLL DOWN, FADE OUT ON SCROLL UP) ---
 const revealEls = document.querySelectorAll(".reveal");
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add("revealed");
+    } else {
+      entry.target.classList.remove("revealed");
     }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
 revealEls.forEach(el => revealObserver.observe(el));
 
 // --- COUNTER ANIMATION ---
-function animateCounter(el, target, duration = 2000) {
+function animateCounter(el, target, duration = 1800) {
   const suffix = el.dataset.suffix || "";
   const isFloat = target.toString().includes(".");
   const start = 0;
@@ -96,13 +98,12 @@ function animateCounter(el, target, duration = 2000) {
 
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && !entry.target.dataset.counted) {
-      entry.target.dataset.counted = "true";
+    if (entry.isIntersecting) {
       const target = parseFloat(entry.target.dataset.target);
       if (!isNaN(target)) animateCounter(entry.target, target);
     }
   });
-}, { threshold: 0.2 });
+}, { threshold: 0.15 });
 document.querySelectorAll(".stat-value, .counter").forEach(el => counterObserver.observe(el));
 
 // --- SMOOTH SCROLL for anchor links ---
