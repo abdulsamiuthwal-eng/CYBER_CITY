@@ -349,14 +349,17 @@ html, body {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  filter: brightness(0.55) saturate(1.25);
+  filter: brightness(0.6) saturate(1.25);
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40px, rgba(0, 0, 0, 0.8) 100px, #000000 160px, #000000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40px, rgba(0, 0, 0, 0.8) 100px, #000000 160px, #000000 100%);
 }
 .footer-bg-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(3, 14, 6, 0.45) 0%, rgba(2, 8, 3, 0.88) 100%),
-              linear-gradient(to bottom, var(--bg-primary, #f4f7f4) 0%, transparent 18%, transparent 80%, #020703 100%);
+  background:
+    linear-gradient(to bottom, var(--bg-primary, #f4f7f4) 0%, rgba(244, 247, 244, 0.85) 4%, rgba(244, 247, 244, 0.25) 14%, transparent 28%, transparent 75%, rgba(2, 8, 3, 0.95) 100%),
+    radial-gradient(circle at center, rgba(3, 14, 6, 0.35) 0%, rgba(2, 8, 3, 0.85) 100%);
   pointer-events: none;
 }
 .footer-video-bg-section .cta-box {

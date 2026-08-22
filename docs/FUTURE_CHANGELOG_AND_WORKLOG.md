@@ -149,6 +149,16 @@ When making modifications in future chat sessions, append an entry following thi
   * **Zero Core Modifications:** No geo-engine or security logic was touched.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — Top Seamless Fade & Mask Dissolve on Footer Background Video
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`
+* **Summary of Changes:**
+  * **Top Gradient & Mask-Image Blend:** Applied a multi-stop linear gradient overlay (`0%` to `28%`) and hardware-accelerated CSS `mask-image` on `.footer-bg-video` so the top edge of the footer video seamlessly dissolves into the main page background without any cut or line.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
 
 
