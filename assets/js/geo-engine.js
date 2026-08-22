@@ -171,14 +171,16 @@
 
     const currentPath = window.location.pathname.toLowerCase();
 
-    // Do NOT run engine if on Admin portal
-    if (currentPath.includes("/admin/")) {
+    // Do NOT run engine if on Admin portal or blocked page (prevent redirect loop)
+    if (currentPath.includes("/admin/") || currentPath.includes("/pages/blocked")) {
       return;
     }
 
     const device = getDeviceType();
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
+
+    console.log("[GeoEngine] Device detected:", device, "| UA:", navigator.userAgent.substring(0, 80));
 
     // ⚡ PROFESSIONAL MULTI-PROVIDER GEO-IP ENGINE — Fast Parallel Fetch
     let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
@@ -191,7 +193,7 @@
       if (d && d.success === true && d.country_code) {
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country || "Pakistan",
+          country_name: d.country || "Unknown",
           country_code: d.country_code.toUpperCase(),
           city: d.city || "Unknown"
         };
@@ -209,7 +211,7 @@
         const cCode = (d.country_code || d.country || "").toUpperCase();
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country || (cCode === "PK" ? "Pakistan" : cCode),
+          country_name: d.country || cCode,
           country_code: cCode,
           city: d.city || "Unknown"
         };
@@ -233,7 +235,7 @@
       throw new Error("api.country.is invalid");
     };
 
-    // Run all 3 reliable providers in parallel — fastest one wins (<200ms)
+    // Run all 3 reliable providers in parallel — fastest one wins
     try {
       const geoResult = await Promise.race([
         Promise.any([
@@ -241,7 +243,7 @@
           fetchFromGeojs(),
           fetchFromCountryIs()
         ]),
-        new Promise(resolve => setTimeout(() => resolve(null), 5000))
+        new Promise(resolve => setTimeout(() => resolve(null), 8000))
       ]);
 
       if (geoResult && geoResult.country_code && geoResult.country_code !== "XX") {
@@ -253,6 +255,8 @@
 
     const code = (geoData.country_code || "").toUpperCase();
     const country = geoData.country_name || "Unknown";
+
+    console.log("[GeoEngine] Country:", country, "(", code, ") | Device:", device);
 
     // Build bulletproof root-relative URLs
     let redirectUrl = null;
@@ -282,11 +286,11 @@
           redirectUrl = "/pages/ur/index.html";
         }
       } else {
+        // DESKTOP from Pakistan — BLOCKED
         accessStatus = "Blocked";
         blockReason = "Device Restricted (Pakistan requires Mobile Device)";
-        if (!isBlockedPage) {
-          redirectUrl = "/pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + device;
-        }
+        redirectUrl = "/pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + encodeURIComponent(device);
+        console.log("[GeoEngine] Pakistan Desktop BLOCKED → redirecting to blocked page");
       }
     } 
     // 3. Saudi Arabia & UAE -> Arabic Version
