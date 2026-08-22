@@ -56,13 +56,142 @@ html, body {
   height: 0;
 }
 
-/* LOADER */
-#loader { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s ease; }
-#loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-logo { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; color: var(--green-primary); letter-spacing: 4px; margin-bottom: 32px; animation: pulse-glow 1.5s ease-in-out infinite; }
-.loader-bar { width: 240px; height: 2px; background: rgba(22,163,74,0.15); border-radius: 99px; overflow: hidden; }
-.loader-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--green-primary), var(--green-light)); border-radius: 99px; animation: load-bar 2.2s ease forwards; }
-@keyframes load-bar { 0% { width: 0%; } 100% { width: 100%; } }
+/* ULTRA-FUTURISTIC CYBER LOADER */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #07190b 0%, #030a04 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s ease;
+  overflow: hidden;
+}
+#loader::before {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(22, 163, 74, 0.18) 0%, rgba(22, 163, 74, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: loader-glow-pulse 2s ease-in-out infinite alternate;
+}
+#loader.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Orbital Rings & Hologram Icon */
+.loader-hologram {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.loader-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: #22c55e;
+  border-right-color: rgba(34, 197, 94, 0.3);
+  animation: loader-spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+.loader-ring-inner {
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(74, 222, 128, 0.5);
+  animation: loader-spin-reverse 2s linear infinite;
+}
+.loader-core-icon {
+  font-size: 32px;
+  filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.8));
+  animation: loader-pulse-scale 1.8s ease-in-out infinite;
+}
+
+/* Shimmer Brand & Status */
+.loader-logo {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: 5px;
+  background: linear-gradient(135deg, #ffffff 30%, #4ade80 70%, #22c55e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  text-shadow: 0 0 24px rgba(34, 197, 94, 0.4);
+}
+.loader-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #86efac;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.1);
+}
+.loader-radar-dot {
+  width: 7px;
+  height: 7px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+  animation: loader-dot-blink 1s ease-in-out infinite alternate;
+}
+
+/* High-Tech Progress Bar */
+.loader-bar {
+  width: 260px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+}
+.loader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #16a34a, #4ade80, #86efac);
+  border-radius: 99px;
+  box-shadow: 0 0 10px #4ade80;
+  animation: load-bar 1.8s ease forwards;
+}
+
+@keyframes loader-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes loader-spin-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes loader-pulse-scale {
+  0%, 100% { transform: scale(0.95); opacity: 0.85; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes loader-glow-pulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes loader-dot-blink {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
 
 /* NAVBAR */
 #navbar {

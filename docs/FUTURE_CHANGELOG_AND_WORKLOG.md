@@ -95,3 +95,15 @@ When making modifications in future chat sessions, append an entry following thi
   * **Strict Functionality Preservation:** Kept all telemetry, Firebase tracking, video playback, and geo-engine logic strictly intact without any modifications.
 * **Verification / Testing:** Tested internal link hierarchy, RTL layout formatting, form submissions, and interactive slider simulations. Deployed to Vercel production.
 
+---
+
+### 2026-08-22 — Ultra-Futuristic Cyberpunk Splash Shield & Zero-Flicker Geo-Routing
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`, `index.html`, `pages/ur/index.html`, `pages/ar/index.html`
+* **Summary of Changes:**
+  * **Ultra-Futuristic Dark Cyberpunk Splash Screen:** Built a high-tech radial dark overlay (`#07190b` to `#030a04`) featuring dual 360-degree rotating orbital quantum rings, glowing hologram emblem with pulse dynamics, glowing gradient shimmer typography (`CYBERCITY 2050`), animated pulsing radar badge, and neon laser progress bar.
+  * **Zero-Flicker Geo-Routing Transition:** Prevents English text flash on the root domain (`/`) while `geo-engine.js` resolves the user's IP (150-200ms). The screen seamlessly maintains the cybernetic loader until target language portal (Urdu/Arabic) takes over and dismisses cleanly.
+  * **Zero Core Engine Modifications:** All geo-engine routing policies, Pakistan mobile allowances/desktop restrictions, and telemetry tracking remain 100% untouched.
+* **Verification / Testing:** Tested on root index, Urdu portal, and Arabic portal. Deployed to Vercel production.
+
+
