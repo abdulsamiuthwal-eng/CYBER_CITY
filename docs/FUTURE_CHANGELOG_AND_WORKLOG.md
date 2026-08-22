@@ -138,6 +138,18 @@ When making modifications in future chat sessions, append an entry following thi
   * **Responsive Typography:** Updated `.stat-value` to use `clamp(1.35rem, 2.2vw, 1.85rem)` with `white-space: nowrap;` for clean fitting inside glassmorphic telemetry cards.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — Full-Width Looping Video Background Footer & Space Grotesk Font Upgrade
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`, `index.html`, `pages/ur/index.html`, `pages/ar/index.html`, `pages/en/index.html`
+* **Summary of Changes:**
+  * **Full-Width Looping Video Footer:** Replaced standalone video box with an edge-to-edge background looping video covering the entire CTA & Footer zone (`object-fit: cover`, dark radial & linear glass overlay, and deep glassmorphic CTA card on top).
+  * **New Era Typography (English):** Upgraded font stack to `Space Grotesk` (Headings) + `Plus Jakarta Sans` (Body Text) for a modern Web3 / AI cyberpunk aesthetic while keeping Noto Sans Arabic intact for RTL languages.
+  * **Zero Core Modifications:** No geo-engine or security logic was touched.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
 
 
