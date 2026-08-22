@@ -742,9 +742,6 @@ html, body {
   width: 1.4em;
   height: 1.4em;
   vertical-align: middle;
-  color: currentColor;
-  fill: none;
-  stroke: currentColor;
   flex-shrink: 0;
   transition: transform 0.25s ease, color 0.25s ease;
 }
@@ -752,14 +749,14 @@ html, body {
 /* Size variants */
 .cc-icon--sm  { width: 1.1em;  height: 1.1em; }
 .cc-icon--md  { width: 1.6em;  height: 1.6em; }
-.cc-icon--lg  { width: 2.2em;  height: 2.2em; }
-.cc-icon--xl  { width: 2.8em;  height: 2.8em; }
+.cc-icon--lg  { width: 2.1em;  height: 2.1em; }
+.cc-icon--xl  { width: 2.6em;  height: 2.6em; }
 
 /* ---- Nav logo icon ---- */
 .nav-logo-icon .cc-icon {
   width: 1.8em;
   height: 1.8em;
-  color: var(--color-primary, #16a34a);
+  color: var(--green-primary, #16a34a);
   filter: drop-shadow(0 0 6px rgba(22, 163, 74, 0.4));
 }
 
@@ -768,24 +765,26 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 14px;
-  border-radius: 14px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
   background: rgba(22, 163, 74, 0.08);
-  border: 1.5px solid rgba(22, 163, 74, 0.2);
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  border: 1.5px solid rgba(22, 163, 74, 0.22);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover .stat-icon {
-  background: rgba(22, 163, 74, 0.15);
-  border-color: rgba(22, 163, 74, 0.4);
-  transform: scale(1.08);
+  background: rgba(22, 163, 74, 0.16);
+  border-color: rgba(22, 163, 74, 0.45);
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 8px 22px rgba(22, 163, 74, 0.22);
 }
 
 .stat-card .cc-icon {
   color: #16a34a;
-  filter: drop-shadow(0 2px 4px rgba(22, 163, 74, 0.3));
+  filter: drop-shadow(0 2px 6px rgba(22, 163, 74, 0.25));
 }
 
 /* ---- System card icon ---- */
