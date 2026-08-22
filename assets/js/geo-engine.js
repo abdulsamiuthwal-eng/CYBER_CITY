@@ -145,11 +145,23 @@
   }
 
   function getDeviceType() {
-    const ua = (navigator.userAgent || navigator.vendor || window.opera || "").toLowerCase();
-    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|crios|samsungbrowser/i.test(ua);
-    const isTouch = (navigator.maxTouchPoints || 0) > 0;
-    const isSmall = (window.innerWidth && window.innerWidth <= 900) || (screen.width && screen.width <= 900);
-    return (isMobileUA || (isTouch && isSmall)) ? "Mobile" : "Desktop";
+    const ua = navigator.userAgent || "";
+    // 1. Strict Desktop OS signatures
+    const isDesktopOS = /Windows NT|Macintosh|Mac OS X(?!.*Mobile)|Linux x86_64|X11/i.test(ua);
+    
+    // 2. Strict Mobile signatures
+    const isMobileDevice = /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari|CriOS|webOS/i.test(ua);
+
+    if (isDesktopOS && !isMobileDevice) {
+      return "Desktop";
+    }
+    if (isMobileDevice) {
+      return "Mobile";
+    }
+
+    // Fallback: screen width
+    const isSmallScreen = (window.innerWidth && window.innerWidth <= 768) || (screen.width && screen.width <= 768);
+    return isSmallScreen ? "Mobile" : "Desktop";
   }
 
   // --- 3. GEOLOCATION & LOGGING ENGINE ---
