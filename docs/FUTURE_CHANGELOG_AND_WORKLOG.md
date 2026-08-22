@@ -158,6 +158,17 @@ When making modifications in future chat sessions, append an entry following thi
   * **Top Gradient & Mask-Image Blend:** Applied a multi-stop linear gradient overlay (`0%` to `28%`) and hardware-accelerated CSS `mask-image` on `.footer-bg-video` so the top edge of the footer video seamlessly dissolves into the main page background without any cut or line.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — Site-Wide Migration to #E8EBE0 ("Green White") Eco-Cyber Theme
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`, `pages/**/*.html`
+* **Summary of Changes:**
+  * **Global Palette Upgrade:** Replaced stark `#ffffff` and `#f4f7f4` backgrounds with `#E8EBE0` ("Green White"), featuring `--bg-secondary: #DFE4D6` and glass frosted card tinting `rgba(232, 235, 224, 0.82)`.
+  * **Enhanced Contrast & Depth:** Updated navbar, hero gradient overlays, secondary action buttons, mobile hamburger drawers, and subpage footers to harmonize with the luxury eco-smart city aesthetic.
+* **Verification / Testing:** Deployed and verified via Vercel CLI across English, Urdu, and Arabic portals.
+
+
 
 
 
