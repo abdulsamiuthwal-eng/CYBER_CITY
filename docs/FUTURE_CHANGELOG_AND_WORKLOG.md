@@ -177,6 +177,17 @@ When making modifications in future chat sessions, append an entry following thi
   * **Translucent Frosted Glass:** Reset `#navbar` background to `rgba(232, 235, 224, 0.45)` with `backdrop-filter: blur(24px)` and subtle inner light reflection, restoring the sparkling see-through glass look over the hero skyline and page content.
 * **Verification / Testing:** Deployed and verified via Vercel CLI.
 
+---
+
+### 2026-08-22 — 100% Floating Transparent Navbar & Seamless Hero Blending
+* **Author / Agent:** Antigravity AI
+* **Impacted Files:** `assets/css/main.css`
+* **Summary of Changes:**
+  * **100% Transparent Floating Header:** Removed the opaque top band and bottom border line on `#navbar` at page rest, allowing the hero skyline image to flow uninterrupted to the top edge.
+  * **Seamless Top & Bottom Blend:** Replaced heavy diagonal hero overlay with a vertical fade dissolve (`0%` to `100%`), allowing the skyline image to shine vibrantly behind the logo and navigation items.
+* **Verification / Testing:** Deployed and verified via Vercel CLI.
+
+
 
 
 
