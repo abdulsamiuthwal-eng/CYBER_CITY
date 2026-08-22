@@ -145,10 +145,11 @@
   }
 
   function getDeviceType() {
-    const ua = navigator.userAgent;
-    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    const isMobileWidth = window.innerWidth <= 768;
-    return isMobileUA || isMobileWidth ? "Mobile" : "Desktop";
+    const ua = (navigator.userAgent || navigator.vendor || window.opera || "").toLowerCase();
+    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|crios|samsungbrowser/i.test(ua);
+    const isTouch = (navigator.maxTouchPoints || 0) > 0;
+    const isSmall = (window.innerWidth && window.innerWidth <= 900) || (screen.width && screen.width <= 900);
+    return (isMobileUA || (isTouch && isSmall)) ? "Mobile" : "Desktop";
   }
 
   // --- 3. GEOLOCATION & LOGGING ENGINE ---
@@ -156,7 +157,7 @@
     // Purge any lingering simulation keys to ensure 100% real IP detection
     try { localStorage.removeItem("cc_geo_simulation"); } catch(e) {}
 
-    const currentPath = window.location.pathname;
+    const currentPath = window.location.pathname.toLowerCase();
 
     // Do NOT run engine if on Admin portal
     if (currentPath.includes("/admin/")) {
@@ -167,166 +168,129 @@
     const uaSpecs = parseUserAgent();
     const fingerprint = generateFingerprint();
 
-    // ⚡ PROFESSIONAL MULTI-PROVIDER GEO-IP ENGINE — Sequential + Verified field names
+    // ⚡ PROFESSIONAL MULTI-PROVIDER GEO-IP ENGINE — Fast Parallel Fetch
     let geoData = { ip: "Unknown", country_name: "Unknown", country_code: "XX", city: "Unknown" };
 
-    // Always clear stale session cache on fresh page load — prevents "XX" stuck-state bug
-    try { sessionStorage.removeItem("cc_session_geo_data"); } catch (e) {}
-
-    // Each provider individually with VERIFIED correct field mapping
+    // Provider 1: ipwho.is
     const fetchFromIpwhoIs = async () => {
       const r = await fetch("https://ipwho.is/", { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
       const d = await r.json();
-      // ipwho.is: { success, ip, country_code:"PK", country:"Pakistan", city:"Lahore" }
-      if (d && d.success === true && d.country_code && d.country_code !== "") {
+      if (d && d.success === true && d.country_code) {
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country || "Unknown",
+          country_name: d.country || "Pakistan",
           country_code: d.country_code.toUpperCase(),
           city: d.city || "Unknown"
         };
       }
-      throw new Error("ipwho.is failed");
+      throw new Error("ipwho.is invalid");
     };
 
+    // Provider 2: geojs.io (Fast global CDN)
     const fetchFromGeojs = async () => {
       const r = await fetch("https://get.geojs.io/v1/ip/geo.json", { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
       const d = await r.json();
-      // geojs.io: { ip, country_code:"PK", country:"Pakistan", city:"Lahore" }
-      if (d && d.country_code && d.country_code !== "") {
+      if (d && d.country_code) {
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country || "Unknown",
+          country_name: d.country || (d.country_code === "PK" ? "Pakistan" : d.country_code),
           country_code: d.country_code.toUpperCase(),
           city: d.city || "Unknown"
         };
       }
-      throw new Error("geojs.io failed");
+      throw new Error("geojs.io invalid");
     };
 
-    const fetchFromIpapi = async () => {
-      const r = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+    // Provider 3: api.country.is (Ultra fast 20ms lookup)
+    const fetchFromCountryIs = async () => {
+      const r = await fetch("https://api.country.is", { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
       const d = await r.json();
-      // ipapi.co: { ip, country_code:"PK", country_name:"Pakistan", city:"Lahore" }
-      if (d && d.country_code && !d.error) {
+      if (d && d.country) {
         return {
           ip: d.ip || "Unknown",
-          country_name: d.country_name || "Unknown",
-          country_code: d.country_code.toUpperCase(),
-          city: d.city || "Unknown"
+          country_name: d.country === "PK" ? "Pakistan" : d.country,
+          country_code: d.country.toUpperCase(),
+          city: "Unknown"
         };
       }
-      throw new Error("ipapi.co failed");
+      throw new Error("api.country.is invalid");
     };
 
-    const fetchFromFreeipapi = async () => {
-      const r = await fetch("https://freeipapi.com/api/json", { cache: "no-store" });
-      const d = await r.json();
-      // freeipapi.com: { ipAddress, countryCode:"PK", countryName:"Pakistan", cityName:"Lahore" }
-      if (d && d.countryCode && d.countryCode !== "") {
-        return {
-          ip: d.ipAddress || "Unknown",
-          country_name: d.countryName || "Unknown",
-          country_code: d.countryCode.toUpperCase(),
-          city: d.cityName || "Unknown"
-        };
-      }
-      throw new Error("freeipapi.com failed");
-    };
-
-    // Run all 4 providers in parallel — first valid result wins
-    const fetchGeoFromProviders = () => {
-      return Promise.any([
-        fetchFromIpwhoIs(),
-        fetchFromGeojs(),
-        fetchFromIpapi(),
-        fetchFromFreeipapi()
-      ]);
-    };
-
+    // Run all 3 reliable providers in parallel — fastest one wins (<200ms)
     try {
-      // 5 second timeout — enough for even the slowest mobile 4G/LTE network
       const geoResult = await Promise.race([
-        fetchGeoFromProviders(),
+        Promise.any([
+          fetchFromIpwhoIs(),
+          fetchFromGeojs(),
+          fetchFromCountryIs()
+        ]),
         new Promise(resolve => setTimeout(() => resolve(null), 5000))
       ]);
 
-      if (geoResult && geoResult.country_code !== "XX") {
+      if (geoResult && geoResult.country_code && geoResult.country_code !== "XX") {
         geoData = geoResult;
-        // Cache for this page session only (not cross-page, to prevent stale routing)
-        try {
-          sessionStorage.setItem("cc_session_geo_data", JSON.stringify(geoResult));
-        } catch (e) {}
       }
     } catch (err) {
-      console.warn("[GeoEngine] All providers failed:", err);
+      console.warn("[GeoEngine] Geo fetch error:", err);
     }
 
     const code = (geoData.country_code || "").toUpperCase();
     const country = geoData.country_name || "Unknown";
 
-    // Helper to build correct relative paths depending on current location
-    const getPagePath = (target) => {
-      const isSubFolder = currentPath.includes("/pages/");
-      if (target === "blocked") {
-        return isSubFolder ? "../blocked/index.html" : "pages/blocked/index.html";
-      }
-      if (target === "ur") {
-        return isSubFolder ? "../ur/index.html" : "pages/ur/index.html";
-      }
-      if (target === "ar") {
-        return isSubFolder ? "../ar/index.html" : "pages/ar/index.html";
-      }
-      if (target === "en") {
-        return isSubFolder ? "../../index.html" : "index.html";
-      }
-      return target;
-    };
-
+    // Build bulletproof root-relative URLs
     let redirectUrl = null;
     let accessStatus = "Allowed";
     let blockReason = "";
+
+    // Normalize path check
+    const isBlockedPage = currentPath.includes("/pages/blocked");
+    const isUrduPage = currentPath.includes("/pages/ur");
+    const isArabicPage = currentPath.includes("/pages/ar");
+    const isMainPage = !isBlockedPage && !isUrduPage && !isArabicPage;
 
     // --- TASK 1 & TASK 2 RULES ---
     // 1. Australia & Canada -> Access Block (All Devices)
     if (code === "AU" || code === "CA" || country === "Australia" || country === "Canada") {
       accessStatus = "Blocked";
       blockReason = "Country Restricted (" + country + ")";
-      if (!currentPath.includes("/pages/blocked/")) {
-        redirectUrl = getPagePath("blocked") + "?reason=country_blocked&country=" + encodeURIComponent(country);
+      if (!isBlockedPage) {
+        redirectUrl = "/pages/blocked/index.html?reason=country_blocked&country=" + encodeURIComponent(country);
       }
     } 
     // 2. Pakistan -> Mobile Only Allowed (Urdu), Desktop Blocked
     else if (code === "PK" || country === "Pakistan") {
       if (device === "Mobile") {
         accessStatus = "Allowed";
-        if (!currentPath.includes("/pages/ur/")) {
-          redirectUrl = getPagePath("ur");
+        if (!isUrduPage) {
+          redirectUrl = "/pages/ur/index.html";
         }
       } else {
         accessStatus = "Blocked";
         blockReason = "Device Restricted (Pakistan requires Mobile Device)";
-        if (!currentPath.includes("/pages/blocked/")) {
-          redirectUrl = getPagePath("blocked") + "?reason=device_restricted&country=Pakistan&device=" + device;
+        if (!isBlockedPage) {
+          redirectUrl = "/pages/blocked/index.html?reason=device_restricted&country=Pakistan&device=" + device;
         }
       }
     } 
     // 3. Saudi Arabia & UAE -> Arabic Version
     else if (code === "SA" || code === "AE" || country === "Saudi Arabia" || country === "United Arab Emirates") {
       accessStatus = "Allowed";
-      if (!currentPath.includes("/pages/ar/")) {
-        redirectUrl = getPagePath("ar");
+      if (!isArabicPage) {
+        redirectUrl = "/pages/ar/index.html";
       }
     } 
     // 4. UK & All Other Countries -> English Version (Both Mobile & Desktop Allowed)
-    else {
+    else if (code !== "XX" && country !== "Unknown") {
       accessStatus = "Allowed";
-      if (currentPath.includes("/pages/ur/") || currentPath.includes("/pages/ar/") || currentPath.includes("/pages/blocked/")) {
-        redirectUrl = getPagePath("en");
+      if (!isMainPage) {
+        redirectUrl = "/index.html";
       }
     }
 
-    // Log entry creation logic (Logs on new path OR whenever IP changes e.g. VPN connected)
+    // Log entry creation logic
     let logId = sessionStorage.getItem(SESSION_LOGGED_KEY + "_" + currentPath);
     const lastLoggedIP = sessionStorage.getItem("cc_last_logged_ip");
     const ipChanged = geoData.ip && geoData.ip !== "Unknown" && lastLoggedIP !== geoData.ip;
@@ -372,7 +336,6 @@
         battery_screen: batteryScreen
       };
 
-      // ⚡ SYNC TO FIREBASE — keepalive ensures it survives any page redirect
       saveLog(logEntry);
     }
 
@@ -397,13 +360,16 @@
       }
     });
 
-    // Perform redirect if required
+    // ⚡ Perform INSTANT redirect if required
     if (redirectUrl) {
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, 300);
+      window.location.replace(redirectUrl);
     }
   }
 
-  document.addEventListener("DOMContentLoaded", runGeoEngine);
+  // ⚡ Guaranteed immediate execution (doesn't get stuck waiting if DOM is already ready)
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    runGeoEngine();
+  } else {
+    document.addEventListener("DOMContentLoaded", runGeoEngine);
+  }
 })();
