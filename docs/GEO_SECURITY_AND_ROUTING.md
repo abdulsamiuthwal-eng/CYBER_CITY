@@ -17,10 +17,14 @@ Concurrent Fast Providers (Promise.any):
 
 ### Key Reliability Mechanisms:
 * **Pre-Render `<head>` Execution:** `geo-engine.js` is loaded directly inside `<head>` and checks `document.readyState` immediately, executing before DOM paint.
-* **Instant URL Replacement:** Uses `window.location.replace('/pages/ur/index.html')` with zero delay, ensuring clean browser history without back-button loops.
-* **IPv6 Array Normalization:** Transparently parses both Object `{}` and Array `[{}]` payloads returned by IPv6 mobile operators.
+* **Instant URL Replacement:** Uses `window.location.replace('/pages/blocked/index.html')` with zero delay, ensuring clean browser history without back-button loops.
+* **IPv6 Array Normalization:** Transparently parses both Object `{}` and Array `[{}]` payloads returned by IPv6 mobile operators (Jazz, Zong, Telenor).
 * **Google Translate Guard:** Contains `<meta name="google" content="notranslate" />` on Urdu pages to prevent mobile Chrome from auto-translating Urdu RTL text into English.
 * **Session Cache Optimization:** Session storage cache prevents duplicate API queries on internal page navigations.
+* **Redirect Loop Prevention:** `geo-engine.js` returns early (`return`) if current page is `/pages/blocked/` or `/admin/` — preventing infinite redirect loops.
+* **Strict Desktop OS Detection:** Classifies `Windows NT`, `Macintosh`, and `Linux x86_64` User-Agents as `"Desktop"` while `Android`, `iPhone`, and `Mobile Safari` UAs are strictly classified as `"Mobile"` — preventing touchscreen laptop misclassification.
+* **Unconditional Pakistan Desktop Block:** The `redirectUrl` for Pakistan Desktop is set **without** any `isBlockedPage` guard — ensuring block fires 100% of the time regardless of current path.
+* **Console Telemetry Logs:** Debug-level `console.log` statements output detected country, country code, and device type — aiding in production diagnosis via browser DevTools.
 
 ---
 

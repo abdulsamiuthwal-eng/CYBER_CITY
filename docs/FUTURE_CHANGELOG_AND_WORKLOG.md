@@ -57,3 +57,16 @@ When making modifications in future chat sessions, append an entry following thi
 * **Summary of Changes:**
   * Created complete, enterprise-grade, structured documentation folder (`docs/`) establishing Single Source of Truth (SSOT).
   * Documented all system architectures, file-by-file inventories, geo-fencing policies, telemetry metrics, admin credentials, and Firebase/GAS cloud endpoints.
+
+---
+
+### 2026-08-22 — Strict Desktop OS Detection & Pakistan Desktop Block Hardening
+* **Author / Agent:** Senior IT Specialist & Enterprise Architect (25+ Years Experience)
+* **Impacted Files:** `assets/js/geo-engine.js`
+* **Summary of Changes:**
+  * **Strict `getDeviceType()` Regex:** Introduced two separate regex checks — `isDesktopOS` (matches `Windows NT`, `Macintosh`, `Linux x86_64`, `X11`) and `isMobileDevice` (matches `Android`, `iPhone`, `iPod`, `CriOS`, etc.) — guaranteeing correct Desktop classification even for touch-enabled laptops.
+  * **Redirect Loop Prevention:** Added `/pages/blocked` to the early-return guard at the top of `runGeoEngine()` — blocking page no longer re-runs the engine and avoids infinite redirect cycles.
+  * **Unconditional Pakistan Desktop Redirect:** Removed the `if (!isBlockedPage)` guard around the Pakistan Desktop `redirectUrl` assignment. Block redirect now fires unconditionally — 100% reliable regardless of current page path.
+  * **Console Debug Telemetry:** Added `[GeoEngine]` prefixed `console.log` statements reporting detected device type and country code for live production diagnosis via browser DevTools (F12 → Console).
+  * **GEO_SECURITY_AND_ROUTING.md Updated:** Documentation updated to reflect all 4 new reliability mechanisms.
+* **Verification / Testing:** Deployed to Vercel production (`https://cyber-city-silk.vercel.app`). PC/Laptop access from Pakistan now reliably redirects to Block screen. Mobile access continues to redirect to Urdu RTL version.
